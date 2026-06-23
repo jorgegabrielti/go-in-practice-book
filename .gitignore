@@ -1,0 +1,26 @@
+# Binários e executáveis compilados
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+bin/
+
+# Dependências / Módulos
+vendor/
+
+# Arquivos de workspace e IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Ferramentas locais/temporárias
+.env
+.env.local
