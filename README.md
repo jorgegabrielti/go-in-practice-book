@@ -50,7 +50,7 @@ go fmt ./...
 
 | Capítulo | Título | Status | Recursos Disponíveis |
 | :---: | :--- | :---: | :---: |
-| **01** | **Introdução & Origens do Go** | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exercicios) |
+| **01** | **Introdução & Origens do Go** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exercicios) |
 | **02** | Capítulo 02 | 🔴 *Não Iniciado* | *A ser criado* |
 | **03** | Capítulo 03 | 🔴 *Não Iniciado* | *A ser criado* |
 | **04** | Capítulo 04 | 🔴 *Não Iniciado* | *A ser criado* |
