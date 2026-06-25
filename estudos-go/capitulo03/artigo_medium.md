@@ -1,0 +1,231 @@
+# 🧪 Capítulo 3: Tipos Básicos - A Química dos Materiais
+
+## Introdução: Nem Tudo é Igual
+
+Voltamos ao nosso **Centro Logístico Universal**. No capítulo anterior, aprendemos a criar caixas (`var`) e colar etiquetas nelas. Mas qualquer funcionário de armazém experiente sabe de uma grande verdade: **a natureza da mercadoria importa**.
+
+Você não armazena **Barras de Ouro** (peso exato, sólido) da mesma forma que armazena **Água** (líquido, difícil de medir a última gota) ou **Cartas** (papel, informação).
+
+*   Se você tentar colocar 10.5 litros de água numa caixa feita para conter *apenas* ovos inteiros, vai dar bagunça.
+*   Se você tentar fazer matemática com uma Carta ("Olá" + "Mundo"), o resultado não é um número, é uma colagem.
+
+Em Go, entender a “Química” de cada tipo é vital. O Go é **fortemente tipado**. Ele não converte as coisas magicamente para você nos bastidores. Se você tentar somar um número Inteiro com um número com Vírgula, o Go diz: *"Pare. Esses são materiais diferentes. Converta explicitamente se você quer misturá-los."*
+
+Neste artigo, vamos abrir a tabela periódica dos elementos do Go: Inteiros, Floats, Strings e Booleanos.
+
+---
+
+## 1. ⚛️ Números Inteiros (Integer): A Solidez dos Blocos
+
+Inteiros são números sem partes fracionárias. Eles são sólidos, discretos. Exemplos: `-10`, `0`, `1`, `42`, `1000`. Você não tem “meio filho”, nem “sua conta bancária tem 0.0001 centavos” (em sistemas contábeis sérios, usamos inteiros de centavos para evitar erros de arredondamento!).
+
+### A Família dos Inteiros
+
+Diferente de Python ou JavaScript, onde “um número é um número”, o Go te dá controle total sobre quanto espaço de memória cada número ocupa. É a diferença entre alugar um contêiner inteiro para guardar uma caneta ou usar uma caixinha de fósforo.
+
+Temos dois grupos principais: com sinal (`int`) e sem sinal (`uint`).
+
+### Com Sinal (“Signed” Integers)
+
+Podem ser positivos ou negativos. O bit mais à esquerda é usado para indicar o sinal (+ ou -).
+
+*   `int8`: Ocupa 8 bits (1 byte). Vai de $-128$ a $127$. (Pense: A idade de uma pessoa. Ninguém vive mais que 127 anos... ainda).
+*   `int16`: Ocupa 16 bits. Vai de $-32.768$ a $32.767$.
+*   `int32`: Ocupa 32 bits. Vai de $-2$ bilhões a $+2$ bilhões.
+*   `int64`: Ocupa 64 bits. É um número gigantesco (9 quintilhões). É o padrão para IDs de banco de dados e contadores grandes.
+*   `int`: **O Especial**. O tamanho dele depende da arquitetura do seu computador (32 ou 64 bits). Hoje em dia, quase sempre é 64 bits. É o padrão que usamos no dia-a-dia a menos que tenhamos um motivo específico para não usar.
+
+### Sem Sinal (“Unsigned” Integers)
+
+Só podem ser positivos (de 0 para cima). Como não precisamos gastar um bit para o sinal de “menos”, conseguimos armazenar o dobro de números positivos no mesmo espaço.
+
+*   `uint8`: De $0$ a $255$. (Muito usado para cores RGB e dados binários brutos `bytes`).
+*   `uint16`, `uint32`, `uint64`: Seguem a mesma lógica.
+
+> ⚠️ **Atenção:** Se você tentar guardar o número $256$ numa variável `uint8`, acontece um fenômeno chamado **Overflow** (Transbordamento). O contador “dá a volta” e vira $0$. É como o hodômetro de um carro velho que zera depois de 99.999 km. O Go não te avisa em tempo de execução! Cuidado com tamanhos fixos.
+
+---
+
+## 2. 🌊 Números de Ponto Flutuante (Float): O Fluido Impreciso
+
+Floats são números com parte fracionária (vírgula). Eles são como líquidos: podem assumir qualquer “nível”, mas são difíceis de medir com precisão atômica. Exemplos: `3.14`, `0.001`, `-99.99`.
+
+Em Go, temos apenas dois tipos principais:
+
+*   `float32`: Precisão simples (ocupa 4 bytes). Econômico, mas instável para muitos cálculos.
+*   `float64`: Precisão dupla (ocupa 8 bytes). É o padrão ouro. Sempre use `float64` a menos que você esteja programando gráficos 3D pesados e precise economizar cada grama de memória.
+
+### O Perigo do Float (A Armadilha do IEEE 754)
+
+Computadores são máquinas binárias. Eles guardam tudo como potências de 2. Alguns números decimais (como `0.1`) são “dízimas periódicas” em binário, impossíveis de representar exatamente.
+
+Faça o teste: Quanto é `0.1 + 0.2`? A resposta humana é `0.3`. A resposta do computador (float) é algo como `0.30000000000000004`.
+
+Essa sujeirinha no final é inevitável.
+
+> 💡 **Dica Profissional:** Nunca use floats para dinheiro. Se você trabalha num banco, use inteiros (contando centavos) ou bibliotecas de precisão arbitrária como `math/big` (da stdlib) ou pacotes como `shopspring/decimal`. O `float` serve para medir distâncias, física, geometria, onde um erro de 0.0000001 milímetro não importa. No dinheiro, importa.
+
+---
+
+## 3. 🧬 Strings: O Texto Imutável
+
+Strings são cadeias de caracteres. Pense nelas como um colar de pérolas, onde cada pérola é uma letra. Em Go, strings são **Imutáveis**. O que isso significa? Se você criou a string `s := "Olá"`, você jamais pode mudar a segunda letra 'l' para 'b' diretamente na memória. Para alterar, você precisa criar uma **nova** string.
+
+```go
+texto := "Gato"
+
+// texto[0] = 'R' // ❌ ISSO É PROIBIDO EM GO!
+
+texto = "Rato" // Isso é permitido: criamos uma NOVA string
+               // e colamos a etiqueta 'texto' nela.
+```
+
+### O Segredo por trás das Cenas: UTF-8
+
+O Go foi criado pelos inventores do UTF-8. Por padrão, toda string em Go suporta nativamente acentos, emojis e alfabetos exóticos (Japonês, Árabe, etc.). Você não precisa configurar “locales” ou “charsets” como em linguagens antigas. Simplesmente funciona.
+
+```go
+mensagem := "Olá mundo! 🌍" // Isso é uma string perfeitamente válida.
+```
+
+### Raw Strings (Strings Brutas)
+
+Às vezes você quer escrever um texto cheio de linhas, aspas e caracteres especiais, e não quer ficar escapando tudo com barras `\`. Use a “crase” (backtick) `` ` ``.
+
+```go
+poema := `
+    Batatinha quando nasce
+    Espalha a rama pelo chão.
+    Escrevo código em Go,
+    Com muita dedicação.
+`
+```
+
+Tudo que estiver entre crases é preservado literalmente, incluindo quebras de linha. É ótimo para escrever HTML, JSON ou SQL dentro do código.
+
+---
+
+## 4. 🎛️ Booleanos (Bool): O Interruptor
+
+O tipo mais simples de todos. Só tem dois estados possíveis:
+
+*   `true` (Verdadeiro / Ligado)
+*   `false` (Falso / Desligado)
+
+*Zero Value*: `false`.
+
+Eles são a base de toda lógica de computação (If/Else). Em Go, você **não pode** converter números em booleanos automaticamente. Em C ou JavaScript, `0` é falso e `1` é verdadeiro. Em Go, `0` é um número. `false` é um booleano. Eles não se misturam. Você não pode fazer `if (1) { ... }`. Você tem que fazer `if (1 == 1) { ... }`.
+
+---
+
+## 🔄 Conversão de Tipos (Casting): O Molde
+
+Como o Go é estrito, você precisa ser explícito quando quer mover dados de um tipo para outro. A sintaxe é sempre `TipoDesejado(Valor)`.
+
+Imagine que você tem um bloco quadrado (`int`) e quer passar num buraco redondo (`float`). Você tem que explicitamente “limar” as arestas.
+
+```go
+var inteiro int = 42
+var flutuante float64 = float64(inteiro) // Converta int para float64
+
+var alto float64 = 99.99
+var baixo int = int(alto) // Converta float64 para int
+// CUIDADO: Converter float -> int TRUNCA (corta) o decimal. Não arredonda.
+// 'baixo' será 99, não 100.
+```
+
+---
+
+## 💡 Dica do Gopher: Rune e Byte: Os Apelidos Úteis
+
+Você vai ver muito dois tipos chamados `byte` e `rune`. Na verdade, eles são apenas apelidos (pense neles como nomes artísticos) para tipos inteiros, mas usados em contextos semânticos específicos.
+*   `byte = uint8`. Usamos quando estamos lidando com *dados brutos, arquivos binários, ou cores*. É a menor unidade de endereçamento.
+*   `rune = int32`. Usamos para representar **Um Caractere Unicode**. Por que int32? Porque existem tantos emojis e letras no mundo que 8 bits não comportam. Um emoji `🌍` pode ocupar até 4 bytes. Quando você itera sobre uma string caractere por caractere, você está lidando com `runes`.
+
+---
+
+## 🔬 Exemplos Práticos
+
+Abaixo, veja o código demonstrativo que reúne todos esses conceitos em ação no arquivo `main.go` da pasta de exemplos:
+
+```go
+package main
+
+import (
+	"fmt"
+	"unsafe" // Biblioteca para ver tamanhos de memória (só para fins educativos)
+)
+
+func main() {
+	// 1. Inteiros e seus tamanhos
+	var pequeno uint8 = 255
+	var grande int64 = 9223372036854775807
+
+	fmt.Println("--- Inteiros ---")
+	fmt.Printf("Pequeno: %d (Tipo: %T)\n", pequeno, pequeno)
+
+	// Tente descomentar a linha abaixo e veja o erro de Overflow:
+	// pequeno = pequeno + 1
+
+	fmt.Println("Grande:", grande)
+
+	// Visualizando o tamanho em bytes na memória
+	var numero int = 10
+	fmt.Printf("Tamanho de 'int' neste computador: %d bytes\n", unsafe.Sizeof(numero))
+
+	// 2. Floats e a Imprecisão
+	fmt.Println("\n--- Floats ---")
+	var a float64 = 0.1
+	var b float64 = 0.2
+	var resultado = a + b
+
+	fmt.Println("0.1 + 0.2 =", resultado)
+	fmt.Println("É exatamente 0.3?", resultado == 0.3) // Vai imprimir false!
+
+	// 3. Strings e Runes
+	fmt.Println("\n--- Strings ---")
+	str := "Go é 🌍"
+	fmt.Println("String:", str)
+	fmt.Println("Tamanho em Bytes (len):", len(str))
+	// Surpresa! "Go é 🌍" tem caracteres visíveis: 5.
+	// Mas 'len' conta BYTES. O emoji ocupa 4 bytes e o 'é' ocupa 2 bytes.
+
+	// Para contar CARACTERES reais, convertemos para 'rune' slice
+	runes := []rune(str)
+	fmt.Println("Quantidade de caracteres (Runes):", len(runes))
+
+	// 4. Conversões (Casting)
+	fmt.Println("\n--- Conversões ---")
+	var nota1 int = 85
+	var nota2 int = 90
+
+	// Queremos a média. Se fizermos (nota1 + nota2) / 2, será uma divisão inteira!
+	// 175 / 2 = 87 (perde o .5)
+	mediaErrada := (nota1 + nota2) / 2
+	fmt.Println("Média Inteira (Errada):", mediaErrada)
+
+	// Precisamos converter para float ANTES de dividir
+	mediaCerta := float64(nota1+nota2) / 2.0
+	fmt.Println("Média Float (Certa):", mediaCerta)
+}
+```
+
+---
+
+## 🛠️ Exercícios Propostos
+
+### 1. O Contador de Quilometragem (Fácil - mas perigoso)
+Crie uma variável do tipo `uint8` para representar a quilometragem do seu carro (sim, é um carro com hodômetro muito pequeno, que só vai até 255km). Comece com o valor `250`. Adicione `10` à variável (`quilometragem = quilometragem + 10`). Imprima o resultado. Explique nos comentários do seu código por que o resultado foi estranho.
+
+### 2. A Chuva em Milímetros (Médio)
+Você está medindo chuva.
+*   Ontem choveu `10.5` mm.
+*   Hoje choveu `10` mm (inteiro). 
+Crie variáveis para esses valores. Tente somá-las em uma variável `total` sem fazer conversão. Veja o erro. Corrija o código fazendo o “casting” necessário para processar a soma como float64. Imprima o total.
+
+### 3. O Inquisidor de Tipos (Desafio)
+O Verbo `%T` do pacote `fmt` serve para imprimir o TIPO de uma variável. Crie um programa que declare:
+*   `x := 10`
+*   `y := 10.0`
+*   `z := "10"` 
+Imprima o valor e o tipo de cada um usando `fmt.Printf("Valor: %v, Tipo: %T\n", variavel, variavel)`. Observe como a inferência de tipos do Go decide se algo é `int` ou `float64` automaticamente.

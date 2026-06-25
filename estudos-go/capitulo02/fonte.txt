@@ -1,0 +1,243 @@
+Aqui está a transcrição completa e fiel do conteúdo textual das imagens fornecidas, dividida de acordo com cada arquivo:
+
+---
+
+### Transcrição de `{9FC5F6F7-7D6F-4AB4-8AF9-1FED2D40BB4E}.png`
+
+**Capítulo 2: Variáveis e Constantes**
+
+**Introdução: O Grande Centro Logístico**
+
+Bem-vindo de volta. No capítulo anterior, demolimos a cozinha caótica e instalamos uma linha de montagem industrial. Agora, vamos falar sobre como essa fábrica gerencia seus materiais.
+
+Imagine um **Centro de Distribuição Gigantesco** (pense em um galpão da Amazon ou Mercado Livre). O fluxo de mercadorias é insano. Milhões de itens entram e saem a cada segundo. Nesse ambiente, você não pode simplesmente jogar um produto no chão e dizer “depois eu pego”. Se você fizer isso, o item se perde, ou pior, alguém tropeça e quebra tudo.
+
+Para organizar o caos, precisamos de duas coisas fundamentais:
+
+1. **Caixas (Variáveis):** Recipientes onde guardamos coisas. Elas podem ser de papelão, plástico ou madeira, dependendo do que vai dentro. O conteúdo pode mudar: você tira uma maçã e coloca uma laranja.
+2. **Etiquetas (Identificadores):** Nomes que colamos nas caixas para saber o que tem lá dentro sem precisar abrir. “Pedido #123”, “Nome do Cliente”, “Preço Total”.
+
+Em Go, assim como no nosso armazém, a **Ordem e a Clareza** são leis absolutas. O Go é uma linguagem *estaticamente tipada*. Isso significa que, se você etiquetar uma caixa como “Sapatos 42”, o Robô de Segurança (o compilador) **jamais** deixará você tentar guardar uma Melancia dentro dela. Ele vai apitar, travar a esteira e gritar com você antes mesmo de você tentar. Em linguagens dinâmicas (como JavaScript), você conseguiria guardar a melancia na caixa de sapatos, mas ela explodiria quando o cliente tentasse calçá-la (erro em tempo de execução).
+
+**O Assunto Principal: Armazenando Dados**
+
+No mundo dos computadores, tudo são zeros e uns na memória RAM. Mas nós, humanos, não pensamos em binário. Pensamos em “Salário”, “Idade”, “Email”. Variáveis são a ponte entre o nosso pensamento humano e a memória do computador.
+
+**1. A Maneira Clássica:** `var`
+
+A forma mais formal de pedir uma caixa no Go é usando a palavra-chave `var`. É como preencher um formulário oficial de requisição no almoxarifado.
+
+A sintaxe é: `var [NOME] [TIPO]`
+
+```go
+var idade int
+
+```
+
+Traduzindo para o “Go-Logistiquês”:
+
+* “Senhor Robô (`var`), por favor, reserve um espaço na prateleira.”
+* “O nome desse espaço será `idade`.”
+* “E esse espaço só pode aceitar números inteiros (`int`).”
+
+Se você tentar fazer `idade = "César"`, o compilador nem gera o executável. Ele te protege da sua própria desatenção.
+
+**Inicialização Explícita**
+
+Você pode pedir a caixa e já colocar algo dentro imediatamente:
+
+```go
+var temperatura float64 = 25.5
+
+```
+
+Aqui, criamos uma variável `temperatura` do tipo `float64` (número com vírgula) e já iniciamos com 25.5.
+
+**2. A Mágica do “Zero Value” (Valor Zero)**
+
+Aqui o Go brilha e se diferencia de linguagens antigas como C ou C++. Imagine que você alugou um guarda-volumes antigão na rodoviária (Linguagem C). Você abre a porta e... tem lixo lá dentro. Um chiclete velho, um papel amassado (o que chamamos de “lixo de memória”). Se você usar aquele espaço sem limpar, seu programa fica imprevisível.
+
+Em Go, o Centro Logístico é de ponta. Quando você pede `var idade int`, o Robô vai até a prateleira, **limpa e esteriliza** a caixa antes de te entregar.
+
+---
+
+### Transcrição de `{B2E01E02-25A5-4368-A55B-4472A8A2E063}.png`
+
+* Para números, ele coloca `0`.
+* Para textos (strings), ele coloca `""` (texto vazio).
+* Para booleanos (verdadeiro/falso), ele coloca `false`.
+
+**Regra de Ouro:** Em Go, não existe “lixo”. Toda variável nasce limpa. Você nunca terá surpresas desagradáveis com variáveis não inicializadas contendo restos de memória de outros programas.
+
+**3. O Jeito Gopher: Inferência de Tipo (:=)**
+
+Programadores são preguiçosos (no bom sentido). Escrever `var nome string = "Ana"` é muito formal e longo. Dentro de funções, o Go permite usar o operador “Pato” (Walrus Operator): `:=`.
+
+```go
+nome := "Ana"
+idade := 30
+
+```
+
+Olhe que maravilha. Não dissemos o tipo! O Compilador Go (nosso Robô inteligente) olha para o lado direito (`"Ana"`), vê que é um texto, e conclui: “Ah, se é um texto, então a caixa `nome` TEM QUE SER do tipo `string`”. Ele cria a caixa, cola a etiqueta de tipo e guarda o valor. Tudo automático.
+
+**Atenção:** Isso não torna o Go dinâmico! Uma vez que `nome` nasceu como string, ele morre como string. Você não pode fazer `nome = 10` depois. O tipo foi **inferido**, mas agora é **fixo**.
+
+*Nota Histórica: Esse operador `:=` foi inspirado numa linguagem antiga chamada Pascal/Newsqueak, que influenciou muito os criadores do Go.*
+
+**4. Multidão de Variáveis**
+
+Você pode declarar várias coisas de uma vez para economizar digitação, como um pedido em atacado:
+
+```go
+var (
+    nome string = "Carlos"
+    idade int = 42
+    salario float64
+)
+
+```
+
+Isso é muito comum em configurações de sistemas, onde agrupamos variáveis relacionadas.
+
+---
+
+**Constantes: As Caixas de Titânio**
+
+Às vezes, temos valores que são verdades absolutas no nosso universo. O valor de Pi (3.14), a URL do banco de dados de produção, ou o nome da empresa. Você não quer que, por acidente, um estagiário (ou você mesmo com sono na sexta-feira) mude o valor de Pi para 5.
+
+Para isso usamos `const`.
+
+```go
+const Pi = 3.14159
+const StatusAprovado = "APROVADO"
+
+```
+
+Uma constante, uma vez criada, é soldada. É uma caixa de titânio lacrada. Se você tentar fazer `Pi = 3.0`, o Robô Compilador vai rir da sua cara e parar a esteira com um erro.
+
+**Curiosidade Técnica Avançada:** Em Go, constantes matemáticas têm uma precisão absurda (muito maior que um `float64` normal) e não têm tipo definido até serem usadas. Exemplo:
+
+```go
+const NumeroGrande = 1000000000
+
+```
+
+Esse `NumeroGrande` não é um `int` nem um `float`. Ele é apenas “um número puro”. Ele só vai virar `int` ou `float` quando você usá-lo numa conta. Isso permite que o Go faça otimizações matemáticas incríveis durante a compilação.
+
+---
+
+### Transcrição de `{69284F07-B744-47C2-B0CA-BEFA8E140338}.png`
+
+**Dica do Gopher**
+
+**[!TIP] Nomes Curtos vs. Nomes Longos: A Filosofia da Clareza**
+
+Em Java ou C#, é comum ver nomes de variáveis como
+`AbstractUserFactoryAuthenticationManager`. É descritivo, mas cansa.
+
+Em Go, seguimos uma regra de ouro sobre **Escopo** (o local onde a variável é visível):
+
+* **Vida Curta, Nome Curto:** Se uma variável só existe dentro de um pequeno laço `for` de 3 linhas, chame-a de `i`. Se é um índice, chame de `idx`. Se é um valor, `v`. Todo mundo sabe o que é. Não precisa chamar de `indexForLoopIterationCounter`.
+* **Vida Longa, Nome Longo:** Se a variável é usada por todo o sistema (exportada), aí sim ela precisa ser descritiva: `TotalClientesAtivos`.
+
+O código Go tende a ser visualmente limpo. Não tenha medo de usar `c` para `cliente` se o código for curto e o contexto for óbvio.
+
+---
+
+**Exemplos Práticos**
+
+Vamos ao código. Crie um arquivo `main.go` dentro de uma pasta `capitulo02`.
+
+```go
+package main
+
+import "fmt"
+
+// Variáveis no nível do pacote (fora de funções) PRECISAM usar "var".
+// O operador ":=" não funciona aqui fora.
+var VersaoDoSistema = "1.0.0"
+
+func main() {
+    // 1. Declaração explícita (O jeito formal)
+    var totalDeProdutos int = 50
+    fmt.Println("Total de Produtos (var):", totalDeProdutos)
+
+    // 2. Declaração sem valor inicial (Zero Value)
+    var estoqueReservado int
+    // O Go garante que isso é 0. Não é lixo de memória.
+    fmt.Println("Estoque Reservado (Zero Value):", estoqueReservado)
+
+    // 3. Inferência de Tipo (O jeito curto e favorito)
+    // O compilador percebe que "Notebook Gamer" é string e 4500.99 é float64
+    produto := "Notebook Gamer"
+    preco := 4500.99
+
+    // Podemos imprimir múltiplos valores separados por vírgula
+    fmt.Println("Produto:", produto, "| Preço:", preco)
+
+    // 4. Mudando o valor (a caixa continua a mesma, o conteúdo muda)
+    preco = 4200.00 // Promoção!
+    fmt.Println("Novo Preço:", preco)
+
+    // ERRO COMUM: Tentar mudar o tipo
+    // Descomente a linha abaixo para ver o erro:
+    // preco = "Quatro Mil" // ERRO: cannot use "Quatro Mil" (type string) as type float64
+    
+    // 5. Constantes
+
+```
+
+---
+
+### Transcrição de `{5D0BFB10-B105-4552-B276-FE7E1281793E}.png`
+
+```go
+    const TaxaDeEntrega = 15.00
+    // TaxaDeEntrega = 20.00 // ERRO: cannot assign to TaxaDeEntrega
+
+    // Calculando total final
+    totalFinal := preco + TaxaDeEntrega
+    fmt.Println("Total a pagar:", totalFinal)
+
+    // 6. Declaração em Bloco (Para organização)
+    var (
+        nomeComprador = "João Silva"
+        emailComprador = "joao@email.com"
+        ativo = true
+    )
+
+    fmt.Println("Cliente:", nomeComprador, emailComprador, "Ativo?", ativo)
+}
+
+```
+
+**O Conceito de Shadowing (Sombra) - Avançado**
+
+Uma peculiaridade do Go é o “Shadowing”. Imagine que você tem uma caixa chamada `total` no chão do armazém. Aí você entra numa sala pequena (um bloco `if` ou `for`) e cria *outra* caixa com o *mesmo nome* `total`. Dentro daquela sala, a nova caixa “faz sombra” na antiga. Você só enxerga a nova. Quando você sai da sala, a nova caixa desaparece e você volta a ver a antiga. Isso é útil, mas perigoso. Tenha cuidado para não criar variáveis com o mesmo nome em escopos aninhados sem querer.
+
+---
+
+**Exercícios**
+
+**1. O Recenseamento (Fácil)**
+
+Crie um programa que declare três variáveis para armazenar seus dados:
+
+* Nome (string)
+* Idade (int)
+* Peso (float64) Use a sintaxe curta `:=` para todas elas. Imprima uma frase completa no final, como: “Meu nome é César, tenho 30 anos e peso 80.5kg”.
+
+**2. O Conversor de Temperatura (Médio)**
+
+Crie uma variável constante chamada `PontoDeEbulicaoAgua` com valor `100` (em Celsius). Crie uma variável `temperaturaAtual` com valor inicial `100`. Converta para Fahrenheit usando a fórmula: `F = (C * 1.8) + 32`. Imprima: “A água ferve a 100°C ou 212°F”. *Dica: Você pode fazer a conta direto dentro do `fmt.Println`.*
+
+**3. O Mistério do Zero (Desafio)**
+
+Declare três variáveis usando `var`, mas **sem dar valor a elas**:
+
+* `var numero int`
+* `var texto string`
+* `var booleano bool`
+
+Imprima as três. Para o texto, como ele é vazio, talvez não apareça nada no terminal. **Desafio Extra:** Pesquise como usar o comando `fmt.Printf("%q", texto)` para fazer o Go mostrar as aspas vazias `""` explicitamente. O `%q` é um “verbo de formatação” (quoted) muito útil para debug. Tente descobrir o que ele faz.
