@@ -50,11 +50,11 @@ func main() {
 	//Queremos a média. Se fizermos (nota1 + nota2)/2, será uma divisão inteira!
 
 	//175/2 = 87 (perde 0.5)
-	mediaErrada := (nota1 + nota2)/2
+	mediaErrada := (nota1 + nota2) / 2
 	fmt.Println("Média inteira (Errada):", mediaErrada)
 
 	//Precisamos converter para float ANTES de dividir
-	mediaCert := float64(nota1 + nota2) / 2.0
+	mediaCert := float64(nota1+nota2) / 2.0
 	fmt.Println("Média correta:", mediaCert)
 
 }

@@ -1,0 +1,394 @@
+Aqui está a transcrição completa e fiel do conteúdo textual e dos blocos de código presentes nas seis imagens fornecidas, organizadas na ordem de leitura do material técnico de Go.
+
+---
+
+## Imagem 1: `{24591177-025B-4635-85CF-9A241C46947C}.png`
+
+### Capítulo 4: Controle de Fluxo - O Guarda de Trânsito
+
+#### Introdução: A Bifurcação na Estrada
+
+Imagine que você programou um robô para dirigir um carro. Até agora, com o que aprendemos (variáveis e tipos), seu robô é capaz de ligar o carro e segurar o volante. Mas ele tem um problema gravíssimo: ele só sabe andar em linha reta. Se aparecer um muro na frente, ele bate. Se o semáforo ficar vermelho, ele fura. Se tiver uma placa "Vire à Direita", ele ignora.
+
+Um programa que só executa linha após linha, do topo até o fim, sem nunca desviar, é inútil para 99% dos problemas do mundo real.
+
+**Controle de Fluxo** é a capacidade do seu programa de **Tomar Decisões**. É o cérebro que diz: "SE estiver chovendo, ENTÃO ligue o limpador de para-brisa. SENÃO, mantenha desligado."
+
+Em Go, a filosofia de simplicidade brilha aqui mais do que nunca. Não temos dezenas de formas de fazer loops ou condições. Temos poucas, mas elas são ferramentas de precisão cirúrgica.
+
+Hoje vamos aprender a usar os semáforos (`if`) e os triadores de trilhos (`switch`).
+
+---
+
+### 1. O Bom e Velho if (Se)
+
+A estrutura `if` é a base de toda a lógica computacional. Em muitas linguagens (como C, Java, JavaScript), somos obrigados a colocar a condição entre parênteses. O Go, sendo pragmático, diz: "Pra quê? O compilador é esperto o suficiente para saber onde a condição começa e termina."
+
+**Sintaxe Básica:**
+
+```go
+if condicao {
+    // Código executado se for Verdadeiro
+}
+
+```
+
+---
+
+*(Coluna da Direita)*
+
+```go
+}
+
+```
+
+#### O Exemplo do Porteiro de Balada
+
+Vamos criar um código que verifica se uma pessoa pode entrar na festa.
+
+```go
+idade := 16
+
+if idade >= 18 {
+    fmt.Println("Pode entrar. Divirta-se!")
+} else {
+    fmt.Println("Desculpe, volte ano que vem.")
+}
+
+```
+
+Note a ausência de `()` em volta de `idade >= 18`. **Regra Rígida:** A chave `{` de abertura **TEM** que estar na mesma linha do `if`. Se você colocá-la na linha de baixo, o Go nem compila. Isso evita aquelas discussões infinitas sobre estilo.
+
+#### O else if (Senão Se)
+
+Quando temos mais de duas opções. Imagine um termostato de ar condicionado.
+
+```go
+temperatura := 25
+
+if temperatura > 30 {
+    fmt.Println("Ligando resfriamento máximo!")
+} else if temperatura > 20 {
+    fmt.Println("Temperatura agradável. Standby.")
+} else {
+    fmt.Println("Ligando aquecedor.")
+}
+
+```
+
+---
+
+## Imagem 2: `{A8E10440-155C-47BE-8F4A-1013CA93636B}.png`
+
+### 2. A Jóia do Go: if com Inicialização Curta
+
+Aqui está algo que vai fazer você se apaixonar pelo Go. Muitas vezes, precisamos criar uma variável temporária *apenas* para fazer um teste, e depois nunca mais a usamos.
+
+**O Jeito "Verboso" (Comum em outras linguagens):**
+
+```go
+// Função fictícia que retorna a nota e um erro (veremos erros depois)
+
+nota := calcularNota()
+
+if nota < 0 {
+    fmt.Println("Erro: Nota inválida")
+}
+
+// O problema: A variável 'nota' continua existindo aqui fora, "poluindo" o escopo.
+
+```
+
+**O Jeito Go (Short Statement):** Você pode declarar a variável E testá-la na mesma linha.
+
+```go
+if nota := calcularNota(); nota < 0 {
+    fmt.Println("Erro: Nota inválida")
+}
+
+// Aqui fora, 'nota' NÃO EXISTE MAIS.
+
+```
+
+A sintaxe é: `if inicialização; condição { ... }`. Isso mantém seu código **extremamente limpo**. A variável nasce, é testada, é usada dentro do bloco `if` (se aprovada), e morre imediatamente quando a chave `}` fecha. O coletor de lixo agradece.
+
+---
+
+### 3. Operadores Lógicos: A Lógica do Guarda
+
+Às vezes, uma única condição não é suficiente. O guarda de trânsito precisa verificar várias coisas ao mesmo tempo.
+
+* `&&` (E / AND): **Todas** as condições precisam ser verdadeiras.
+* Exemplo: "Para dirigir, você precisa de habilitação `E` estar sóbrio."
+
+
+* `||` (OU / OR): **Pelo menos uma** condição precisa ser verdadeira.
+* Exemplo: "Para pagar, aceitamos dinheiro `OU` cartão."
+
+
+* `!` (NÃO / NOT): Inverte o valor.
+* Exemplo: "Se `NÃO` estiver chovendo..."
+
+
+
+```go
+carteira := true
+sobrio := false
+
+if carteira && sobrio {
+    fmt.Println("Pode dirigir.")
+} else if carteira && !sobrio {
+    fmt.Println("Você tem carteira, mas bebeu. Chame um Uber!")
+} else {
+    fmt.Println("Você nem deveria estar perto do volante.")
+}
+
+```
+
+**Curiosidade: Curto-Circuito (Short-Circuit)** O Go é preguiçoso (de um jeito inteligente). Se você tem `A && B` e o `A` já for falso, o Go **nem olha** para o `B`. Ele já sabe que a frase inteira é mentira. Isso é ótimo para performance e para evitar erros (como verificar se uma variável é nula antes de usá-la).
+
+---
+
+## Imagem 3: `{B703783C-B765-4016-A424-D45292457F4E}.png`
+
+### 4. Switch: O Triador de Trilhos
+
+O `if/else` é ótimo para decisões binárias. Mas e se você tiver 10 opções? Fazer uma "escada" de `else if` fica horrível de ler.
+
+Imagine um operador de trem que precisa desviar o trem para o trilho 1, 2, 3, 4 ou 5. Em Go, o `switch` é a ferramenta perfeita. E ele é **muito melhor** que o `switch` do C, Java ou JavaScript.
+
+#### Diferenças Cruciais do Switch em Go:
+
+1. **Sem "break" manual:** Em outras linguagens, se você esquece de escrever `break`, o código "cai" (fallthrough) e executa o próximo `case` sem querer. Isso causa bugs horríveis. No Go, o `break` é automático. Ele entra no `case`, executa e sai.
+2. **Qualquer tipo serve:** Você pode fazer switch de números, strings ou até tipos.
+
+```go
+dia := "terça"
+
+switch dia {
+case "segunda":
+    fmt.Println("Dia de começar a dieta.")
+case "terça":
+    fmt.Println("Dia de tacos!")
+case "sexta", "sábado": // Podemos agrupar múltiplos casos!
+    fmt.Println("Dia de festa.")
+default:
+    fmt.Println("Dia normal.")
+}
+
+```
+
+#### O switch sem Condição (O Substituto Limpo do if/else)
+
+Este é um padrão idiomático muito forte em Go. Você escreve `switch` sem nenhuma variável do lado. Isso significa "Switch True". Ele vai executar o primeiro `case` que for verdadeiro.
+
+É a maneira mais elegante de escrever cadeias complexas de lógica:
+
+```go
+hora := 14
+
+switch {
+case hora < 12:
+    fmt.Println("Bom dia")
+case hora < 18:
+    fmt.Println("Boa tarde")
+default:
+    fmt.Println("Boa noite")
+}
+
+```
+
+Compare isso visualmente com um monte de `if hora < 12 { ... } else if hora < 18 { ... }`. O `switch` é muito mais legível porque alinha tudo verticalmente.
+
+---
+
+### Dica do Gopher
+
+**[!TIP] Evite Ninhos Profundos (Deep Nesting)**
+
+Um código com muitos `if` dentro de `if` dentro de `if` fica parecendo uma flecha `>`. Isso é difícil de ler.
+
+*Ruim:*
+
+```go
+if usuario != nil {
+    if usuario.Ativo {
+
+```
+
+---
+
+## Imagem 4: `{25420960-263D-430D-B845-3700BF071D71}.png`
+
+*(Continuação do bloco de código "Ruim" da imagem anterior)*
+
+```go
+        if usuario.Admin {
+            deletarBancoDeDados()
+        }
+    }
+}
+
+```
+
+**Bom (Padrão "Early Return"):** Trate os erros e casos negativos primeiro e retorne cedo. Deixe o "caminho feliz" para o final, sem indentação.
+
+```go
+if usuario == nil {
+    return
+}
+
+if !usuario.Ativo {
+    return
+}
+
+if !usuario.Admin {
+    return
+}
+
+// Caminho Real (Happy Path) limpo e na margem esquerda
+deletarBancoDeDados()
+
+```
+
+Isso se chama "Guard Clauses" e deixa seu código profissional.
+
+---
+
+### Exemplos Práticos
+
+Vamos ao código. Pasta `capitulo04`, arquivo `main.go`.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time" // Vamos usar para pegar a hora atual
+)
+
+func main() {
+	// 1. If Clássico
+	numero := 42
+
+	if numero%2 == 0 { // O operador % pega o resto da divisão (Módulo)
+		fmt.Println(numero, "é Par")
+	} else {
+		fmt.Println(numero, "é Ímpar")
+	}
+
+	// 2. If com Inicialização Curta (Short Statement)
+	// 'x' só existe dentro deste bloco
+	if x := 10 * 2; x > 15 {
+		fmt.Println("X é grande:", x)
+	}
+
+	// fmt.Println(x) // Se descomentar, dá erro de "undefined: x"
+
+	// 3. Switch Clássico
+	sabor := "chocolate"
+
+	switch sabor {
+	case "chocolate":
+
+```
+
+---
+
+## Imagem 5: `{E56C2AD5-0199-4054-9B13-D537BCDAE22B}.png`
+
+```go
+	fmt.Println("Meu favorito!")
+
+	case "baunilha":
+		fmt.Println("Clássico.")
+
+	case "morango", "flocos": // Múltiplos
+		fmt.Println("É, serve.")
+
+	default:
+		fmt.Println("Nunca provei esse sabor.")
+	}
+
+	// 4. Switch "Tagless" (Sem tag/vazio) - Poderoso!
+	// Vamos pegar o dia da semana atual
+	hoje := time.Now().Weekday()
+
+	fmt.Println("Hoje é:", hoje)
+
+	switch {
+	case hoje == time.Saturday || hoje == time.Sunday:
+		fmt.Println("É fim de semana! \o/")
+	case hoje == time.Monday:
+		fmt.Println("Força, guerreiro. É segunda.")
+	default:
+		fmt.Println("Dia de trabalho normal.")
+	}
+
+	// 5. O polêmico "fallthrough"
+	// Em Go, o switch sai no primeiro case que encontra.
+	// Se você QUISER que ele continue descendo (comportamento estilo C),
+	// precisa usar 'fallthrough'. É raro, mas existe.
+
+```
+
+---
+
+*(Coluna da Direita)*
+
+```go
+	nivel := 1
+
+	fmt.Println("\nNíveis de Acesso:")
+
+	switch nivel {
+	case 1:
+		fmt.Println("- Acesso Básico")
+		fallthrough // Executa o código do próximo case TAMBÉM
+	case 2:
+		fmt.Println("- Acesso Intermediário")
+		// Não tem fallthrough, para aqui.
+	case 3:
+		fmt.Println("- Acesso Admin")
+	}
+
+	// Note que se nível for 1, ele imprime "Básico" E "Intermediário".
+}
+
+```
+
+---
+
+### Exercícios
+
+#### 1. O Verificador de Senha (Fácil)
+
+Crie duas variáveis: `login` e `senha` (strings). Use um `if` para verificar:
+
+* SE o login for "admin" E a senha for "1234": Imprima "Acesso Liberado".
+* SENÃO: Imprima "Acesso Negado". Tente alterar os valores para testar os dois caminhos.
+
+#### 2. A Tabela Periódica (Médio - Switch)
+
+Crie uma variável `sigla` (string) com o símbolo de um elemento químico (ex: "H", "He", "Li").
+
+---
+
+## Imagem 6: `{90E7752D-2A30-4E5C-B118-5FBA35017965}.png`
+
+Use um `switch` para imprimir o nome completo do elemento baseada na sigla.
+
+* "H" -> Hidrogênio
+* "He" -> Hélio
+* "Li" -> Lítio
+* Outros -> "Elemento desconhecido" Teste com pelo menos 3 casos.
+
+#### 3. O Detetive de Bissexto (Desafio Lógico)
+
+Um ano é bissexto se:
+
+1. For divisível por 4...
+2. EXCETO se for divisível por 100...
+3. A MENOS que seja divisível por 400.
+
+Crie uma variável `ano := 2024`. Escreva a lógica usando `if/else` (ou um switch true esperto) para dizer se o ano é bissexto ou não. *Dica: O operador módulo `%` é seu amigo. `ano % 4 == 0` verifica divisibilidade.* Teste com: 1900 (Não é), 2000 (É), 2024 (É), 2023 (Não é).

@@ -9,6 +9,6 @@ var chuvaOntem float64 = 10.5
 var chuvaHoje int = 10
 var total float64 = chuvaOntem + float64(chuvaHoje) // Casting => float64(VALOR)
 
-func main(){
+func main() {
 	fmt.Println("Resultados das chuvas de ontem + hoje: ", total)
 }

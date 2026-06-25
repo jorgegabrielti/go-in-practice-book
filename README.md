@@ -46,14 +46,14 @@ go fmt ./...
 
 ## 📊 Painel de Progresso (30 Capítulos)
 
-**Progresso Atual:** `[██░░░░░░░░░░░░░░░░░░░░]` **10.0%** (3 de 30 capítulos concluídos)
+**Progresso Atual:** `[███░░░░░░░░░░░░░░░░░░░]` **13.3%** (4 de 30 capítulos concluídos)
 
 | Capítulo | Título | Status | Recursos Disponíveis |
 | :---: | :--- | :---: | :---: |
 | **01** | **Introdução & Origens do Go** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo01/exercicios) |
 | **02** | **Variáveis, Constantes e Tipos de Dados** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/exercicios) |
 | **03** | **Tipos Básicos — A Química dos Materiais** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/exercicios) |
-| **04** | Capítulo 04 | 🔴 *Não Iniciado* | *A ser criado* |
+| **04** | **Controle de Fluxo — O Guarda de Trânsito** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exercicios) |
 | **05** | Capítulo 05 | 🔴 *Não Iniciado* | *A ser criado* |
 | **06** | Capítulo 06 | 🔴 *Não Iniciado* | *A ser criado* |
 | **07** | Capítulo 07 | 🔴 *Não Iniciado* | *A ser criado* |

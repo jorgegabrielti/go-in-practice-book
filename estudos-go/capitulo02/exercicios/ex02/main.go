@@ -5,8 +5,9 @@ package main
 import "fmt"
 
 const PontoDeEbulicao = 100
+
 var temperaturaAtual = 100
 
-func main(){
-	fmt.Println("A água ferve a ", PontoDeEbulicao, "Cº ou", (PontoDeEbulicao * 1.8 + 32), "Fº")
+func main() {
+	fmt.Println("A água ferve a ", PontoDeEbulicao, "Cº ou", (PontoDeEbulicao*1.8 + 32), "Fº")
 }

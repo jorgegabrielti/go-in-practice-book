@@ -7,5 +7,5 @@ var quilometragem uint8 = 250
 
 func main() {
 
-	fmt.Println("Kilometragem =", quilometragem + 10) // 250 + 10 = 260 - 256 = 4. Por conta da limitação de tamanho do uint8, o contador vira e iniciar a contagem do 0.
+	fmt.Println("Kilometragem =", quilometragem+10) // 250 + 10 = 260 - 256 = 4. Por conta da limitação de tamanho do uint8, o contador vira e iniciar a contagem do 0.
 }
