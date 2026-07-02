@@ -2,6 +2,8 @@
 
 > **Livro Go na Prática: 30 capítulos para dominar a linguagem**
 
+> 🧮 [Teste de mesa de todo o código deste capítulo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/teste-de-mesa.md)
+
 ---
 
 ## 🚦 O Guarda de Trânsito: Tomando Decisões
@@ -100,14 +102,14 @@ Em vez de aninhar múltiplos `if`s (formato "flecha"), utilize cláusulas de gua
 ### 5. [Exemplo 05: Fases do Dia](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exemplos/ex05/main.go)
 *   **Conceito:** `switch` sem expressão (tagless) atuando como uma cadeia de `if-else`.
 
-### 6. [Exemplo 06: Resumo Geral e Fallthrough](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exemplos/ex6/main.go)
+### 6. [Exemplo 06: Resumo Geral e Fallthrough](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exemplos/ex06/main.go)
 *   **Conceito:** Arquivo unificado exercitando o `if` curto, o `switch` sem expressão e a palavra-chave `fallthrough`.
 
 ---
 
 ## 🔬 Exercícios Práticos Resolvidos
 
-### 1. [Exercício 01: O Verificador de Senha](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exercicios/exe01/main.go)
+### 1. [Exercício 01: O Verificador de Senha](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exercicios/ex01/main.go)
 *   **Objetivo:** Validar login e senha com operadores lógicos.
 *   **Conceito:** Operadores lógicos (`&&`) e desvio condicional simples.
 

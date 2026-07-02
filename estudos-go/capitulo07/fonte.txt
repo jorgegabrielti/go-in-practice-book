@@ -1,0 +1,268 @@
+Aqui está a transcrição fiel e completa das sete imagens fornecidas, organizadas em ordem sequencial de leitura do material original:
+
+---
+
+## Imagem 1
+
+# Capítulo 7: Arrays e Slices - A Lista Fixa e a Lista Mágica
+
+### Introdução: O Dilema da Caixa de Ovos
+
+Imagine que você vai ao mercado comprar ovos. Você pega uma daquelas caixas de papelão que comportam exatamente **12 ovos**. Essa caixa é rígida.
+
+* Se você quiser comprar apenas 2 ovos, a caixa ocupa o espaço de 12 na sua sacola (desperdício).
+* Se você quiser comprar 13 ovos, não cabe. Você precisa de uma segunda caixa ou de uma caixa maior que não existe.
+
+Isso é um **Array**. Uma estrutura rígida, de tamanho fixo, definida no momento em que é fabricada (compilada).
+
+Agora, imagine uma **Lista de Compras no Celular**. Você começa com 0 itens. Adiciona "Leite", vira 1. Adiciona "Pão", vira 2. Se remover um, a lista diminui. Se adicionar mil itens, a lista cresce infinitamente (ou até a memória do celular acabar). Essa lista é flexível, dinâmica e poderosa.
+
+Isso é um **Slice** (Fatia).
+
+Em Go, você vai ouvir uma frase repetida mil vezes: **"Use Slices, não Arrays."** Mas para entender o Slice (a mágica), você precisa entender o Array (o alicerce), porque **todo Slice vive em cima de um Array escondido**.
+
+---
+
+### 1. Arrays: A Fundação de Concreto
+
+Um Array em Go é uma sequência de blocos de memória de tamanho fixo. A declaração exige duas coisas: o **Tamanho** e o **Tipo**.
+
+---
+
+## Imagem 2
+
+```go
+// var nome [Tamanho]Tipo
+
+var notas [3]int
+
+```
+
+Isso cria 3 gavetas inteiras: `notas[0]`, `notas[1]` e `notas[2]`. Como todo bom cidadão Go, elas nascem zeradas (`0`).
+
+**A Rigidez:** O tamanho é parte do TIPO. Isso significa que `[3]int` é um tipo completamente diferente de `[4]int`. Você não pode somar os dois, nem passar um array de 4 posições para uma função que espera um de 3. Essa rigidez torna Arrays pouco práticos para o dia-a-dia, mas extremamente rápidos e eficientes para a memória do computador.
+
+---
+
+### 2. Slices: A Janela Mágica
+
+O Slice é, tecnicamente, uma **visão** (uma janela) sobre um Array. Ele não armazena os dados em si. Ele aponta para onde os dados estão.
+
+Um slice tem três componentes internos:
+
+1. **Ponteiro:** "Onde começa o array de verdade?"
+2. **Tamanho (len):** "Quantos itens eu estou mostrando agora?"
+3. **Capacidade (cap):** "Quantos itens cabem no total antes de eu precisar mudar de array?"
+
+#### Criando Slices
+
+A forma mais comum não é criar um array manualmente, mas deixar o Go criar para você.
+
+```go
+// Repare que NÃO colocamos número dentro dos colchetes []
+
+var lista []string
+
+```
+
+Ou, o jeito mais idiomático, usando a função `make` (fazer):
+
+```go
+// make([]Tipo, Tamanho, Capacidade)
+
+numeros := make([]int, 5) // Cria um slice de 5 inteiros (todos 0)
+
+```
+
+---
+
+## Imagem 3
+
+### 3. A Mágica do append (Anexar)
+
+Como adicionamos coisas num Slice?
+
+Usamos a função `append`.
+
+```go
+numeros := []int{1, 2}
+
+numeros = append(numeros, 3)
+
+// numeros agora é [1, 2, 3]
+
+```
+
+**O que acontece nos bastidores (O Segredo da Performance):** Quando você faz um `append` e o array subjacente está cheio (Capacidade esgotada):
+
+1. O Go para tudo.
+2. Ele cria um **NOVO array maior** (geralmente o dobro do tamanho) em outro lugar da memória.
+3. Ele copia todos os dados antigos para o novo array.
+4. Ele adiciona o novo item.
+5. Ele joga o array velho fora.
+
+Isso parece lento? Se fizer milhões de vezes, sim. Mas para o uso normal, é incrivelmente otimizado.
+
+---
+
+### 4. Fatiando Fatias (Slicing Slices)
+
+A sintaxe `lista[minimo:maximo]` permite pegar pedaços de um slice. Matematicamente, é um intervalo **Semi-Aberto**: `[Início, Fim)`. Inclui o Início, EXCLUI o Fim.
+
+```go
+frutas := []string{"Maçã", "Banana", "Uva", "Pera"}
+
+// Pegar da posição 1 até 3 (exclui o 3)
+
+lanche := frutas[1:3]
+
+// Resultado: ["Banana", "Uva"]
+
+// Pega índice 1, Pega índice 2. Para no 3.
+
+```
+
+Atalhos:
+
+* `frutas[:2]` = Do início até o 2 (não incluso). `["Maçã", "Banana"]`
+
+---
+
+## Imagem 4
+
+* `frutas[2:]` = Do 2 até o final. `["Uva", "Pera"]`
+* `frutas[:]` = Tudo.
+
+**ALERTA DE PERIGO (Memória Compartilhada):** Quando você fatia um slice (`b = a[0:1]`), o slice `b` **APONTA PARA O MESMO ARRAY** de `a`. Se você mudar o valor em `b`, você muda em `a`! Eles são janelas diferentes olhando para a mesma sala.
+
+---
+
+### 5. Iterando com range (Recapitulação)
+
+A melhor forma de ler slices é com `range`.
+
+```go
+for indice, valor := range frutas {
+
+    fmt.Println(indice, valor)
+
+}
+
+```
+
+---
+
+### Dica do Gopher
+
+> **[ITIP] Cuidado com Memory Leaks em Arquivos Gigantes**
+>
+> Imagine que você carregou um arquivo de 1GB na memória (um slice gigante de bytes). Aí você decide que só quer os primeiros 5 caracteres: `pequeno := arquivoGigante[:5]`
+>
+> Você espera que o Go jogue o 1GB fora e fique só com os 5 bytes? **NÃO.** Como eu disse, o slice novo APONTA para o array antigo. Enquanto a variável `pequeno` existir, o Go tem que manter o array de 1GB inteiro na memória, só para "alimentar" aqueles 5 bytes.
+>
+> **Solução:** Para esses casos, copie os dados para um slice novo e independente usando a função `copy()`. Isso libera o monstro de 1GB para a lixeira.
+
+---
+
+## Imagem 5
+
+### Exemplos Práticos
+
+Pasta `capitulo07`, arquivo `main.go`.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    // --- 1. Arrays (Fixos) ---
+
+    var arrayFixo [3]int
+    arrayFixo[0] = 10
+    arrayFixo[1] = 20
+    arrayFixo[2] = 30
+
+    // arrayFixo[3] = 40 // ⚠ ERRO DE COMPILAÇÃO: Índice fora dos limites
+
+    fmt.Println("Array Fixo:", arrayFixo)
+
+    // Array Literal (Já preenchido)
+    vogais := [5]string{"A", "E", "I", "O", "U"}
+    fmt.Printf("Vogais (Tamanho %d): %v\n", len(vogais), vogais)
+
+    // --- 2. Slices (Dinâmicos) ---
+
+    // Criando slice vazio
+    var sliceDinamico []int
+    fmt.Println("\nSlice Inicial:", sliceDinamico)
+    fmt.Println("Vazio?", sliceDinamico == nil)
+
+    // Usando Append para crescer
+    // Note que precisamos reatribuir: slice = append(slice, ...)
+    sliceDinamico = append(sliceDinamico, 100)
+    sliceDinamico = append(sliceDinamico, 200, 300) // Vários de uma vez
+    fmt.Println("Slice Crescido:", sliceDinamico)
+
+    // --- 3. Capacidade vs Tamanho ---
+
+    // Vamos observar o Go "trocando de array" quando enche
+    numeros := make([]int, 0, 2) // Tamanho 0, Capacidade 2
+    fmt.Printf("\nLen: %d, Cap: %d, Array: %v", len(numeros), cap(numeros), numeros)
+
+    numeros = append(numeros, 1)
+
+```
+
+---
+
+## Imagem 6
+
+```go
+    numeros = append(numeros, 2)
+    fmt.Printf("Len: %d, Cap: %d, Array: %v (Cheio!)\n", len(numeros), cap(numeros), numeros)
+
+    numeros = append(numeros, 3) // OPA! Passou de 2. O Go precisa alocar mais memória.
+    // Geralmente ele dobra a capacidade para ter folga.
+
+    fmt.Printf("Len: %d, Cap: %d, Array: %v (Cresceu!)\n", len(numeros), cap(numeros), numeros)
+
+    // --- 4. Slicing e Referência ---
+
+    original := []string{"Batman", "Superman", "Mulher Maravilha"}
+    copiaCopia := original[:2] // Pega Batman e Superman
+
+    fmt.Println("\nOriginal:", original)
+    fmt.Println("Cópia (Slice):", copiaCopia)
+
+    // PERIGO: Mudando a cópia
+    copiaCopia[0] = "Coringa"
+
+    fmt.Println("--- Depois de mudar a cópia ---")
+    fmt.Println("Cópia:", copiaCopia)
+    fmt.Println("Original:", original) // O Batman virou Coringa no original também!
+}
+
+```
+
+---
+
+### Exercícios
+
+#### 1. A Lista de Convidados (Fácil)
+
+Crie um Slice de strings vazio. Use um loop `for` (que roda 5 vezes) para pedir ao usuário digitar um nome (ou apenas simule nomes como "Convidado 1", "Convidado 2"). A cada volta, faça `append` na lista. No final, imprima a lista completa e o tamanho dela.
+
+#### 2. O Removedor de Itens (Médio - Hacker)
+
+O Go não tem uma função `remove` nativa para Slices. Você tem que fazer na mão usando Fatiamento. Crie um slice: `nums := []int{10, 20, 30, 40, 50}`. Imagine que queremos remover o 30 (índice 2). A lógica é: Pegue tudo ANTES do 30 (`nums[:2]`) e cole com tudo DEPOIS do 30 (`nums[3:]`). Use `append` para
+
+---
+
+## Imagem 7
+
+grudar essas duas metades. Imprima o resultado final. Deve ser `[10 20 40 50]`.
+
+#### 3. O Matador de Duplicatas (Desafio)
+
+Dado o slice: `licao := []int{2, 5, 2, 8, 5, 9, 2}`. Escreva um algoritmo que crie um **novo slice** contendo apenas os números únicos (sem repetição). Resultado esperado: `[2 5 8 9]`. *Dica: Você vai precisar de um loop dentro de outro loop (para verificar se já existe), ou pode esperar até aprendermos sobre MAPS no próximo capítulo para fazer isso de forma eficiente.* Por enquanto, tente fazer com loops ("força bruta").

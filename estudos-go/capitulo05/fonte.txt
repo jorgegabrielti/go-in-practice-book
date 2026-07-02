@@ -1,0 +1,315 @@
+Aqui está a transcrição completa e fiel de todo o conteúdo textual e dos blocos de código presentes nas quatro imagens fornecidas:
+
+---
+
+# [Imagem 1]
+
+## Capítulo 5: Laços de Repetição (For) - A Pista de Corrida
+
+### Introdução: O Poder da Automação
+
+Imagine que você precisa descascar 1.000 batatas. Se você escrevesse um programa sem laços de repetição, teria que escrever a instrução "Descascar batata" mil vezes. Seria um código com milhares de linhas, impossível de manter. Se o chefe dissesse "Agora descasque 1.001", você teria que editar o código manualmente.
+
+Computadores são máquinas fantásticas por um motivo principal: eles **adoram** tarefas repetitivas. Eles podem fazer a mesma coisa bilhões de vezes sem ficarem entediados, cansados ou com LER (Lesão por Esforço Repetitivo).
+
+Na maioria das linguagens, você tem um cardápio confuso de opções para repetição: `while`, `do-while`, `for`, `for-each`, `repeat-until`. O Go olha para isso e diz: "Que bagunça. Vamos simplificar."
+
+Em Go, existe **apenas uma** palavra-chave para repetição: `for`. Mas não se engane: esse único "canivete" é capaz de se transformar para cobrir todos os usos possíveis.
+
+Vamos entrar na pista de corrida e ver quantas voltas conseguimos dar.
+
+---
+
+### 1. O for Clássico (O Piloto de Fórmula 1)
+
+Este é o formato mais comum, herdado da linguagem C. Ele tem três partes bem definidas, como uma corrida organizada.
+
+1. **A Largada (Inicialização):** Onde começamos? (`i := 0`)
+2. **A Bandeira Quadriculada (Condição):** Continuamos correndo? (`i < 5`)
+3. **O Pit Stop (Pós-execução):** O que acontece ao fim de cada volta? (`i++`, ou seja, incremente 1).
+
+```go
+// Sintaxe: for [largada]; [condição]; [passo]
+
+for i := 0; i < 5; i++ {
+    fmt.Println("Volta número:", i)
+}
+
+```
+
+Traduzindo:
+
+* “Crie uma variável `i` valendo 0.”
+* “Verifique: `i` é menor que 5? Sim (0 < 5). Então execute o bloco.”
+* “Imprime 0.”
+* “Terminou o bloco. Incremente `i` (agora vale 1).”
+* “Verifique: `i` é menor que 5? Sim...”
+* ...
+* “Quando `i` for 5, a condição `5 < 5` é FALSA. O loop para.”
+
+**Detalhe Importante:** A variável `i` só existe dentro do loop. Se tentar acessá-la fora, dá erro.
+
+---
+
+### 2. O for como while (O Corredor de Maratona)
+
+Em outras linguagens, usamos `while` (enquanto) quando não sabemos quantas voltas vamos dar, apenas sabemos que temos que correr *enquanto* tivermos energia. Em Go, basta omitir a inicialização e o passo. O `for` vira um `while` automaticamente.
+
+```go
+energia := 100
+
+// Lê-se: "Enquanto energia for maior que 0..."
+
+for energia > 0 {
+    fmt.Println("Correndo... Energia:", energia)
+    
+    energia = energia - 20 // Perde 20 de energia por volta
+}
+
+```
+
+---
+
+# [Imagem 2]
+
+```go
+    fmt.Println("Ufa! Cansei.")
+}
+
+```
+
+Olhe como é limpo. Sem `while`, sem sintaxe nova. Apenas `for condição`.
+
+---
+
+### 3. O Loop Infinito (O Servidor Eterno)
+
+Existem casos onde você quer que o programa rode para sempre. Exemplo: Um servidor web esperando requisições, ou um robô que monitora a temperatura de um reator nuclear 24/7.
+
+Basta remover tudo. Um `for` pelado.
+
+```go
+for {
+    fmt.Println("Estou rodando para sempre...")
+    
+    // Precisamos de uma lógica interna para parar, senão
+    // o programa trava seu computador ou roda até acabar a bateria.
+    
+    break // "break" é o freio de emergência.
+}
+
+```
+
+Este padrão é extremamente comum em Go para criar serviços (daemons) que rodam em background.
+
+---
+
+### 4. Controlando o Fluxo: break e continue
+
+Às vezes, imprevistos acontecem na pista.
+
+#### break (O Freio de Emergência)
+
+Serve para abortar a missão imediatamente. Sai do loop na hora, não importa a condição.
+
+```go
+for i := 0; i < 1000; i++ {
+    if i == 5 {
+        fmt.Println("Achei o número 5! Parando a busca.")
+        
+        break // Sai do loop. Não vai até 999.
+    }
+}
+
+```
+
+#### continue (Pular Volta)
+
+Serve para pular o resto do código *desta* volta e ir direto para a próxima.
+
+```go
+for i := 0; i < 5; i++ {
+    if i == 2 {
+        fmt.Println("Pulando o 2 (número do azar)...")
+        
+        continue // Volta para o topo, ignora o Println de baixo
+    }
+    
+    fmt.Println("Processando número:", i)
+}
+
+// Saída: 0, 1, (pula), 3, 4
+
+```
+
+---
+
+### 5. O range (Varrer Coleções)
+
+Este é um spoiler do Capítulo 7 (Arrays), mas é tão útil que precisa ser mencionado. Imagine que você tem uma lista de nomes. Você não quer lidar com índices `0, 1, 2`. Você quer "Para cada nome na lista, faça isso".
+
+```go
+nomes := []string{"Ana", "Beto", "Carla"}
+
+// i: índice (posição)
+// nome: valor
+
+```
+
+---
+
+# [Imagem 3]
+
+```go
+for i, nome := range nomes {
+    fmt.Printf("Na posição %d tem: %s\n", i, nome)
+}
+
+```
+
+O `range` é inteligente. Ele itera sobre qualquer coleção (arrays, slices, maps, strings) e te entrega mastigado.
+
+---
+
+### Dica do Gopher
+
+> **[!TIP] Use _ para ignorar o que não precisa**
+> O Go é chato. Se você declarar uma variável e não usar, ele não compila. Em loops `range`, muitas vezes você só quer o **valor**, não o **índice**.
+
+```go
+// ERRADO: O compilador reclama que 'i' foi declarado mas não usado
+
+for i, nome := range nomes {
+    fmt.Println(nome)
+}
+
+```
+
+> **SOLUÇÃO:** Use o "Blank Identifier" (Identificador em Branco) `_`. É um buraco negro onde você joga valores que quer ignorar.
+
+```go
+// CERTO: Jogamos o índice no lixo (_)
+
+for _, nome := range nomes {
+    fmt.Println(nome)
+}
+
+```
+
+---
+
+### Exemplos Práticos
+
+Vamos codar. Pasta `capitulo05`, arquivo `main.go`.
+
+```go
+package main
+
+import (
+    "fmt"
+    "time" // Para fazer o computador esperar um pouco
+)
+
+func main() {
+    
+    // 1. O For Clássico (Contagem Regressiva)
+    
+    fmt.Println("--- Contagem Regressiva ---")
+    
+    for i := 5; i > 0; i-- { // i-- diminui 1
+        fmt.Println(i)
+        
+        time.Sleep(500 * time.Millisecond) // Espera meio segundo (efeito dramático)
+    }
+    
+    fmt.Println("DECOLAR! 🚀")
+    
+    
+    // 2. O For como While (Acumulando soma)
+    
+    fmt.Println("\n--- Somando até passar de 100 ---")
+    
+    soma := 0
+    numero := 1
+    
+    for soma < 100 {
+        soma = soma + numero
+        
+        fmt.Printf("Somando %d... Total: %d\n", numero, soma)
+        
+        numero++
+    }
+
+```
+
+---
+
+# [Imagem 4]
+
+```go
+    // 3. For Infinito com Break (Jogo de Adivinhação Fake)
+    
+    fmt.Println("\n--- Tentando acertar a senha ---")
+    
+    tentativa := 0
+    
+    for {
+        tentativa++
+        
+        // Simulando uma chance de acertar
+        
+        if tentativa == 4 {
+            fmt.Println("Senha correta encontrada na tentativa", tentativa)
+            
+            break // Importante! Sem isso, loop eterno.
+        }
+        
+        fmt.Println("Tentativa", tentativa, "falhou...")
+    }
+    
+    
+    // 4. Usando 'continue' (Imprimir apenas ímpares)
+    
+    fmt.Println("\n--- Apenas Ímpares ---")
+    
+    for i := 0; i <= 10; i++ {
+        if i%2 == 0 { // Se o resto da divisão por 2 for 0, é Par
+            continue // Pula os pares
+        }
+        
+        fmt.Print(i, " ") // Print sem '\n' imprime na mesma linha
+    }
+    
+    fmt.Println() // Quebra de linha final
+}
+
+```
+
+---
+
+### Exercícios
+
+#### 1. A Tabuada (Fácil)
+
+Escolha um número (ex: 7). Use um loop `for` clássico para imprimir a tabuada desse número de 1 a 10. Saída esperada: `7 x 1 = 7`, `7 x 2 = 14` ...
+
+#### 2. O “FizzBuzz” (Clássico de Entrevistas - Médio)
+
+Este exercício é usado em entrevistas reais para filtrar quem não sabe programar. Faça um loop de 1 a 50.
+
+* Se o número for divisível por 3, imprima “Fizz”.
+* Se for divisível por 5, imprima “Buzz”.
+* Se for divisível por 3 E por 5, imprima “FizzBuzz”.
+* Senão, imprima apenas o número.
+
+*Dica: A ordem das condições no `if` importa! Verifique o “FizzBuzz” (15) antes dos outros.*
+
+#### 3. A Soma dos Dígitos (Desafio Lógico)
+
+Comece com um número grande, por exemplo `n := 12345`. Use um loop `for` (estilo while) para somar todos os dígitos desse número. Resultado esperado: 1 + 2 + 3 + 4 + 5 = 15.
+
+*Pistas Matemáticas:*
+
+* `n % 10` te dá o último dígito (5).
+* `n / 10` (divisão inteira) remove o último dígito (vira 1234).
+* Repita isso enquanto `n > 0`.

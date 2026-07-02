@@ -1,0 +1,3 @@
+Cole aqui a transcrição completa e fiel do conteúdo do livro para este capítulo (texto e blocos de código, na ordem em que aparecem no material original).
+
+Este arquivo é a fonte primária do capítulo: o README.md, os exemplos/exercícios e todo o conteúdo de divulgação (Medium e LinkedIn) devem ser derivados dele — não de memória ou suposição sobre o que o livro diz.

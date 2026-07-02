@@ -2,6 +2,8 @@
 
 > **Livro Go na Prática: 30 capítulos para dominar a linguagem**
 
+> 🧮 [Teste de mesa de todo o código deste capítulo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/teste-de-mesa.md)
+
 ---
 
 ## 📦 Variáveis em Go

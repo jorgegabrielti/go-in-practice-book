@@ -10,9 +10,32 @@ Bem-vindo ao repositório de estudos baseado no livro/guia **Go na Prática: 30 
 
 Cada capítulo possui sua própria pasta dentro do diretório `estudos-go/` e segue uma estrutura padrão e modular para evitar conflitos de compilação:
 
-*   **`README.md`**: Anotações teóricas resumidas e explicação dos exercícios práticos.
+*   **`fonte.txt`**: transcrição bruta e fiel do conteúdo do livro para o capítulo — a fonte primária de tudo que vem depois (notas, exemplos e conteúdo de divulgação).
+*   **`README.md`**: Anotações teóricas resumidas e explicação dos exercícios práticos, escritas a partir do `fonte.txt`.
 *   **`exemplos/`**: Códigos demonstrados ao longo do capítulo (ex: `exemplos/ola-mundo/main.go`).
 *   **`exercicios/`**: Subpastas isoladas para cada exercício, permitindo rodar e compilar as diferentes resoluções sem conflitos de pacotes.
+*   **`teste-de-mesa.md`**: rastreamento manual (linha a linha, sem rodar o código) da execução de todo `main.go` do capítulo — prevê o estado das variáveis e a saída no terminal antes de confirmar com `go run`. Útil para expor bugs sutis (aliasing de slices, overflow silencioso, uso incorreto de `fmt`).
+
+Use `estudos-go/_template/` como ponto de partida ao iniciar um novo capítulo, e consulte `estudos-go/GLOSSARIO.md` para revisar os termos-chave já estudados.
+
+---
+
+## ✍️ Produção de Conteúdo (LinkedIn & Medium)
+
+A pasta `conteudo/` centraliza tudo relacionado à divulgação dos estudos nas redes:
+
+*   **`conteudo/medium/`**: artigos completos, um por capítulo (`capituloXX.md`).
+*   **`conteudo/linkedin/`**: posts curtos de divulgação, um por capítulo (`capituloXX.md`).
+*   **`_template.md`**: modelo padrão em cada subpasta, com checklist de publicação.
+*   **`conteudo/PAINEL.md`**: painel de status (rascunho/revisado/publicado) e links das publicações.
+
+> **Regra de ouro:** todo artigo de Medium e post de LinkedIn deve ser baseado no `fonte.txt` do capítulo correspondente, não em memória ou suposição sobre o conteúdo do livro.
+
+---
+
+## 🏋️ Pilha de Exercícios (Prática Deliberada)
+
+A pasta `pilha-exercicios/` traz, para cada capítulo concluído, no mínimo 10 exercícios extras (inspirados no formato de [exercicios.dunossauro.com](https://exercicios.dunossauro.com/)), em dificuldade crescente e **sem solução no arquivo** — o objetivo é praticar de verdade, não copiar resposta. Veja `pilha-exercicios/README.md` para as regras completas.
 
 ---
 
@@ -46,7 +69,7 @@ go fmt ./...
 
 ## 📊 Painel de Progresso (30 Capítulos)
 
-**Progresso Atual:** `[███░░░░░░░░░░░░░░░░░░░]` **13.3%** (4 de 30 capítulos concluídos)
+**Progresso Atual:** `[████████░░░░░░░░░░░░░░]` **30%** (9 de 30 capítulos concluídos)
 
 | Capítulo | Título | Status | Recursos Disponíveis |
 | :---: | :--- | :---: | :---: |
@@ -54,12 +77,12 @@ go fmt ./...
 | **02** | **Variáveis, Constantes e Tipos de Dados** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo02/exercicios) |
 | **03** | **Tipos Básicos — A Química dos Materiais** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo03/exercicios) |
 | **04** | **Controle de Fluxo — O Guarda de Trânsito** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo04/exercicios) |
-| **05** | Capítulo 05 | 🔴 *Não Iniciado* | *A ser criado* |
-| **06** | Capítulo 06 | 🔴 *Não Iniciado* | *A ser criado* |
-| **07** | Capítulo 07 | 🔴 *Não Iniciado* | *A ser criado* |
-| **08** | Capítulo 08 | 🔴 *Não Iniciado* | *A ser criado* |
-| **09** | Capítulo 09 | 🔴 *Não Iniciado* | *A ser criado* |
-| **10** | Capítulo 10 | 🔴 *Não Iniciado* | *A ser criado* |
+| **05** | **Laços de Repetição (For) — A Pista de Corrida** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo05/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo05/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo05/exercicios) |
+| **06** | **Funções — As Mini-Fábricas Especializadas** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo06/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo06/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo06/exercicios) |
+| **07** | **Arrays e Slices — A Lista Fixa e a Lista Mágica** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo07/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo07/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo07/exercicios) |
+| **08** | **Maps — O Guarda-Volumes Inteligente** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo08/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo08/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo08/exercicios) |
+| **09** | **Ponteiros — O Endereço da Casa** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo09/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo09/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo09/exercicios) |
+| **10** | Capítulo 10 | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/README.md) |
 | **11** | Capítulo 11 | 🔴 *Não Iniciado* | *A ser criado* |
 | **12** | Capítulo 12 | 🔴 *Não Iniciado* | *A ser criado* |
 | **13** | Capítulo 13 | 🔴 *Não Iniciado* | *A ser criado* |

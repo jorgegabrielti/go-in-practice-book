@@ -1,0 +1,336 @@
+Aqui está a transcrição fiel e completa das cinco imagens fornecidas, organizadas em ordem sequencial de leitura do material original:
+
+---
+
+## Imagem 1 (`{69D34B6C-61B7-48DE-93DF-5B0CE5B94C92}.png`)
+
+# Capítulo 6: Funções - As Mini-Fábricas Especializadas
+
+### Introdução: O Fim da Cópia e Cola
+
+Imagine que você está escrevendo um livro (como eu estou fazendo agora). Toda vez que você precisa escrever a data atual no rodapé da página, você olha no relógio, formata o dia, mês e ano, e digita. Se o livro tem 500 páginas, você vai fazer isso 500 vezes. E se seu editor disser: “Mude o formato. Agora quero Ano/Mês/Dia”? Você terá que procurar todas as 500 ocorrências e mudar uma por uma. A chance de esquecer uma é de 100%.
+
+Na programação, chamamos isso de princípio **DRY (Don't Repeat Yourself - Não Se Repita)**. Se você copiou e colou um bloco de código mais de duas vezes, você criou uma dívida técnica.
+
+A solução para isso são as **Funções**. Pense em uma função como uma **Mini-Fábrica** ou um **Eletrodoméstico Especializado** (como um liquidificador).
+
+1. **Entrada (Input):** Você joga frutas e leite dentro (Parâmetros).
+2. **Processamento:** As lâminas giram e misturam tudo (Corpo da Função).
+3. **Saída (Output):** Sai uma vitamina deliciosa (Retorno).
+
+Você não precisa saber *como* o motor do liquidificador funciona por dentro. Você só precisa saber que, se colocar frutas, sai vitamina. Isso é **Abstração**.
+
+O Go trata funções como cidadãos de primeira classe. Elas são poderosas, limpas e têm um superpoder que a maioria das linguagens (como Java ou C) não tem nativamente: **Múltiplos Retornos**.
+
+---
+
+### 1. Anatomia de uma Função
+
+Uma função em Go é declarada com a palavra-chave `func`.
+
+```go
+// func [Nome] ( [Inputs] ) [Output] { ... }
+
+func somar(a int, b int) int {
+    resultado := a + b
+    
+    return resultado
+}
+
+```
+
+* `func` : “Atenção, vou definir uma nova máquina.”
+* `somar` : O nome da máquina.
+* `(a int, b int)` : A boca do funil. Ela exige dois inteiros. Se você tentar jogar uma string aqui, a máquina trava.
+* `int` : O tubo de saída. Essa máquina promete devolver um inteiro.
+* `return` : O momento em que o produto sai da máquina.
+
+#### Simplificando Parâmetros
+
+Se os parâmetros são do mesmo tipo, o Go permite uma abreviação elegante: `func somar(a, b int)` é igual a `func somar(a int, b int)`.
+
+---
+
+### 2. O Superpoder: Múltiplos Retornos
+
+Em C ou Java, uma função só pode retornar **uma única coisa**. Se você quiser retornar “O resultado da conta” E “Se deu erro”, você tem que fazer gambiarras (retornar um objeto complexo, lançar uma exceção, ou usar ponteiros).
+
+Em Go, uma função pode retornar quantos valores quiser. Isso muda o jogo.
+
+Imagine uma função que tenta dividir dois números. Dividir por zero é impossível. Como a função avisa o chamador que deu erro?
+
+```go
+// Retorna (int, error)
+//
+// O primeiro valor é o resultado, o segundo é o erro (se houver)
+
+func dividir(a, b int) (int, error) {
+    if b == 0 {
+        // "nil" é o nulo do Go. Se tem erro, retornamos 0 e o erro.
+        
+        return 0, fmt.Errorf("não é possível dividir por zero")
+    }
+
+```
+
+---
+
+## Imagem 2 (`{2F6E7D85-5930-4F62-841E-029EA9F7977E}.png`)
+
+```go
+}
+
+// Se deu certo, retornamos o resultado e "nil" (sem erro).
+
+return a / b, nil
+
+}
+
+```
+
+No lado de quem chama, fazemos assim:
+
+```go
+resultado, erro := dividir(10, 0)
+
+if erro != nil {
+    fmt.Println("Ops, deu ruim:", erro)
+} else {
+    fmt.Println("O resultado é:", resultado)
+}
+
+```
+
+Esse padrão `resultado, err := funcao()` é a assinatura visual do Go. Você vai digitar isso milhares de vezes. É a forma como o Go garante que você **trate os erros** logo após eles acontecerem, em vez de deixar o programa explodir lá na frente.
+
+---
+
+### 3. Retornos Nomeados (Named Returns)
+
+O Go permite que você dê nomes às variáveis de retorno *na assinatura da função*. É como se você já deixasse as caixas de saída pré-etiquetadas na linha de montagem.
+
+```go
+func coordenadas() (latitude float64, longitude float64) {
+    latitude = -23.5505
+    longitude = -46.6333
+    
+    // "Naked Return" (Retorno Pelado)
+    //
+    // Como as variáveis já têm nome e já foram preenchidas,
+    // basta dizer "return". O Go sabe que deve devolver aquelas duas.
+    return
+}
+
+```
+
+**Cuidado:** Embora pareça mágico, o “Naked Return” pode ser confuso em funções muito longas. Se a função tiver 50 linhas, você chega no final e vê só um `return`, e tem que subir tudo pra lembrar o que está sendo retornado. Use com moderação, apenas em funções curtas.
+
+---
+
+### 4. Funções Variádicas (O “Buffet Livre”)
+
+Às vezes você não sabe quantos parâmetros vai receber. Pode ser 1, pode ser 10, pode ser 1000. O `fmt.Println`, por exemplo, aceita qualquer quantidade de coisas.
+
+Para fazer isso, usamos “três pontinhos” `...` antes do tipo.
+
+```go
+func somarTudo(numeros ...int) int {
+    total := 0
+    
+    // Aqui dentro, "numeros" funciona como um Array (Slice) de ints
+    
+    for _, n := range numeros {
+        total += n
+    }
+    
+    return total
+}
+
+// Chamando:
+
+somarTudo(10, 20) // Retorna 30
+
+somarTudo(1, 1, 1, 1) // Retorna 4
+
+```
+
+---
+
+## Imagem 3 (`{66F10577-100D-4460-B1E7-F9BADF3C7563}.png`)
+
+Isso é muito útil para criar ferramentas flexíveis.
+
+---
+
+### 5. Funções Anônimas e Closures
+
+Em Go, funções são valores. Você pode guardar uma função dentro de uma variável, assim como guarda um número.
+
+```go
+func main() {
+    // Criando uma função sem nome e guardando na variável "dobrar"
+    
+    dobrar := func(x int) int {
+        return x * 2
+    }
+    
+    fmt.Println(dobrar(5)) // Imprime 10
+}
+
+```
+
+Isso é útil quando precisamos de uma função descartável, que só será usada ali naquele momento, ou quando queremos passar uma lógica como parâmetro para outra função (Callbacks).
+
+---
+
+### Dica do Gopher
+
+> **[ITIP] Funções Pequenas são Funções Felizes**
+> Uma regra prática de engenharia de software: *Uma função deve fazer apenas UMA coisa e fazê-la bem.*
+> Se o nome da sua função é `CalcularSalarioEEnviarEmailEAtualizarBancoDeDados()`, você tem um problema. Quebre em três funções:
+> 1. `CalcularSalario()`
+> 2. `EnviarEmail()`
+> 3. `AtualizarBancoDeDados()`
+> 
+> 
+> E crie uma quarta função “Gerente” que chama as três. Por que?
+> * *Fica mais fácil de testar (você pode testar o cálculo sem mandar emails de verdade).*
+> * *Fica mais fácil de ler.*
+> * *Fica mais fácil de reutilizar (talvez amanhã você precise calcular o salário sem enviar email do banco).*
+> 
+> 
+
+---
+
+### Exemplos Práticos
+
+Pasta `capitulo06`, arquivo `main.go`.
+
+```go
+package main
+
+import (
+    "fmt"
+    "errors" // Pacote simples para criar erros
+)
+
+// 1. Função Simples
+
+func boasVindas(nome string) {
+    fmt.Printf("Olá, %s! Bem-vindo ao sistema.\n", nome)
+}
+
+// 2. Múltiplos Retornos (Cálculo de Retângulo)
+//
+// Retorna Área e Perímetro
+
+func geometria(largura, altura float64) (float64, float64) {
+    area := largura * altura
+
+```
+
+---
+
+## Imagem 4 (`{364A3D76-0F73-4E69-8CD4-914C3944E123}.png`)
+
+```go
+    perimetro := 2 * (largura + altura)
+    
+    return area, perimetro
+}
+
+// 3. Tratamento de Erro (Divisão)
+
+func dividir(a, b float64) (float64, error) {
+    if b == 0 {
+        // errors.New cria um erro simples
+        
+        return 0, errors.New("proibido dividir por zero")
+    }
+    
+    return a / b, nil
+}
+
+// 4. Variádica (Média de N notas)
+
+func calcularMedia(notas ...float64) float64 {
+    total := 0.0
+    
+    if len(notas) == 0 {
+        return 0
+    }
+    
+    for _, nota := range notas {
+        total += nota
+    }
+    
+    return total / float64(len(notas))
+}
+
+func main() {
+    // Chamando função simples (sem retorno)
+    
+    boasVindas("César")
+    
+    // Recebendo múltiplos valores
+    
+    a, p := geometria(5.0, 3.0) // Go infere que são float64
+    
+    fmt.Printf("Retângulo 5x3 -> Área: %.2f, Perímetro: %.2f\n", a, p)
+    
+    // Testando erro
+    
+    resultado, err := dividir(10, 2)
+    
+    if err != nil {
+        fmt.Println("Erro:", err)
+    } else {
+        fmt.Println("10 / 2 =", resultado)
+    }
+    
+    // Forçando erro
+    
+    _, err2 := dividir(10, 0) // Usamos _ para ignorar o resultado, pois sabemos que vai falhar
+    
+    if err2 != nil {
+        fmt.Println("Tentativa de dividir por 10/0 falhou com sucesso:", err2)
+    }
+    
+    // Função Variádica
+    
+    mediaTurma := calcularMedia(8.5, 9.0, 5.5, 10.0)
+    
+    fmt.Printf("Média da turma: %.2f\n", mediaTurma)
+}
+
+```
+
+---
+
+### Exercícios
+
+### 1. A Calculadora Básica (Fácil)
+
+---
+
+## Imagem 5 (`{EC3F26C2-1E7E-4602-814D-AA6473448AF0}.png`)
+
+Crie três funções: `soma`, `subtracao` e `multiplicacao`. Cada uma deve receber dois inteiros e retornar um inteiro. Na `main`, chame as três com os números 10 e 5 e imprima os resultados.
+
+### 2. O Analisador de Preços (Médio - Múltiplos Retornos)
+
+Crie uma função `analisarPreco(preco float64)` que retorna dois valores:
+
+1. Um `bool` indicando se é “caro” (acima de 100.0).
+2. Uma `string` com uma mensagem (“Produto Premium” ou “Produto Barato”). Teste a função com valores 150.0 e 50.0.
+
+### 3. O Conversor Seguro (Desafio)
+
+Você receberá segundos (int). Crie uma função `converterTempo(segundos int)` que retorna `(horas, minutos, segundos)`.
+
+Exemplo: Se entrar 3661 segundos, deve sair `1, 1, 1` (1 hora, 1 minuto e 1 segundo). *Dica Lógica:*
+
+* Horas = total / 3600
+* Resto = total % 3600
+* Minutos = Resto / 60
+* Segundos = Resto % 60 Implemente e teste.
