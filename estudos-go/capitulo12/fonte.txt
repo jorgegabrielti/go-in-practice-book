@@ -1,0 +1,252 @@
+Capítulo 12: Interfaces - O Plugue Universal
+
+========================================
+INTRODUÇÃO: A TOMADA DA PAREDE
+========================================
+
+Olhe para uma tomada elétrica na sua parede. Ela não se importa com o que você vai ligar nela. Pode ser uma geladeira, uma TV, um carregador de celular ou uma furadeira. A tomada tem um Contrato: "Se você tiver dois pinos redondos com tal espessura, eu te dou energia."
+
+Se a geladeira tivesse que ser soldada na parede, seria impossível trocar de geladeira. Se a TV precisasse de uma tomada triangular e o secador de uma quadrada, sua casa seria um caos.
+
+Em programação, Interfaces são essas tomadas. Elas definem O QUE deve ser feito, sem se importar com QUEM faz ou COMO faz.
+
+É o recurso mais poderoso do Go para criar sistemas flexíveis e "desacoplados".
+
+
+========================================
+1. DEFININDO O CONTRATO
+========================================
+
+Uma interface é apenas uma lista de métodos. Não tem campos, não tem código, não tem lógica. É pura definição.
+
+type Barulhento interface {
+    FazerBarulho() string
+}
+
+Qualquer coisa no universo que tenha um método FazerBarulho() que retorna uma string automaticamente vira um Barulhento.
+
+
+A Mágica do "Duck Typing" (Tipagem Pato)
+
+Em Java ou C#, você precisa ser explícito: class Cachorro implements Barulhento. Você tem que assinar o contrato no cartório.
+
+Em Go, é implícito. "Se anda como pato, nada como pato e grasna como pato, então o Go assume que é um pato." Você não precisa escrever implements. Se você criou o método, a interface já está valendo.
+
+
+========================================
+2. IMPLEMENTANDO (SEM SABER)
+========================================
+
+Vamos criar dois tipos totalmente diferentes: um animal e um objeto.
+
+type Cachorro struct{}
+
+func (c Cachorro) FazerBarulho() string {
+    return "Au Au"
+}
+
+type Alarme struct{}
+
+func (a Alarme) FazerBarulho() string {
+    return "TRIMMMM!"
+}
+
+Pronto. Tanto Cachorro quanto Alarme agora são compatíveis com a interface Barulhento.
+
+
+========================================
+3. USANDO A INTERFACE (O POLIMORFISMO)
+========================================
+
+Agora podemos criar uma função que aceita qualquer coisa que seja barulhenta. A função não sabe se vai receber um cachorro ou um relógio. Ela só sabe que pode chamar .FazerBarulho() e vai funcionar.
+
+func IncomodarVizinho(b Barulhento) {
+    fmt.Println("O vizinho está ouvindo:", b.FazerBarulho())
+}
+
+func main() {
+    dog := Cachorro{}
+    relogio := Alarme{}
+
+    // A Mágica: Passando tipos diferentes para a mesma função
+    IncomodarVizinho(dog)
+    IncomodarVizinho(relogio)
+}
+
+Isso é Polimorfismo. Tratar coisas diferentes da mesma maneira.
+
+
+========================================
+4. A INTERFACE VAZIA (O CORINGA)
+========================================
+
+Se uma interface define requisitos, o que acontece se criarmos uma interface sem requisitos?
+
+interface{}
+
+// Ou, nas versões mais novas do Go (1.18+):
+any
+
+Uma interface vazia diz: "Eu aceito qualquer coisa que tenha... zero métodos". Ora, TUDO tem pelo menos zero métodos. Logo, any aceita qualquer coisa: inteiros, strings, structs, ponteiros.
+
+É assim que o fmt.Println funciona. Ele aceita tudo.
+
+func ImprimirQualquerCoisa(v any) {
+    fmt.Println(v)
+}
+
+Cuidado: Usar any quebra a segurança de tipos do Go. Use com muita moderação. Se você transformar tudo em any, você transforma o Go em JavaScript, perdendo a ajuda do compilador.
+
+
+========================================
+5. TYPE ASSERTION (ABRINDO A CAIXA MISTERIOSA)
+========================================
+
+Quando você recebe uma variável do tipo any (ou qualquer interface), às vezes você precisa saber o que tem lá dentro de verdade para acessar campos específicos.
+
+Imagine que você recebe uma caixa fechada (any). Você acha que tem um Cachorro dentro.
+
+func processar(v any) {
+    // Tentativa arriscada (Panic se não for Cachorro)
+    c := v.(Cachorro)
+
+    // Tentativa segura (Comma Ok Idiom)
+    dog, ok := v.(Cachorro)
+    if ok {
+        fmt.Println("É um cachorro! Raça:", dog.Raca)
+    } else {
+        fmt.Println("Não é um cachorro.")
+    }
+}
+
+Isso se chama Type Assertion.
+
+Também existe o Type Switch para testar vários tipos:
+
+switch valor := v.(type) {
+case int:
+    fmt.Println("É um número:", valor*2)
+case string:
+    fmt.Println("É um texto:", len(valor))
+default:
+    fmt.Println("Não sei o que é.")
+}
+
+
+========================================
+DICA DO GOPHER
+========================================
+
+[TIP] Defina Interfaces Onde Elas São USADAS, Não Onde São Criadas.
+
+Em Java, o criador da classe Arquivo geralmente cria a interface IArquivo. Em Go, quem define a interface é o consumidor.
+
+Se sua função só precisa ler dados, crie uma interface Leitor localmente:
+
+type Leitor interface {
+    Ler() string
+}
+
+E peça um Leitor no parâmetro. Isso permite que qualquer um no futuro crie um objeto que tenha o método Ler e passe para sua função, sem precisar importar sua biblioteca inteira.
+
+Interfaces pequenas (1 ou 2 métodos) são as melhores. (Ex: io.Reader, fmt.Stringer)
+
+
+========================================
+EXEMPLOS PRÁTICOS — pasta capitulo12, arquivo main.go
+========================================
+
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+// O Contrato
+type Geometrico interface {
+    Area() float64
+    Perimetro() float64
+}
+
+// Tipo 1: Retângulo
+type Retangulo struct {
+    Largura, Altura float64
+}
+
+// Implementando Geometrico para Retangulo
+func (r Retangulo) Area() float64 {
+    return r.Largura * r.Altura
+}
+
+func (r Retangulo) Perimetro() float64 {
+    return 2*r.Largura + 2*r.Altura
+}
+
+// Tipo 2: Círculo
+type Circulo struct {
+    Raio float64
+}
+
+// Implementando Geometrico para Circulo
+func (c Circulo) Area() float64 {
+    return math.Pi * c.Raio * c.Raio
+}
+
+func (c Circulo) Perimetro() float64 {
+    return 2 * math.Pi * c.Raio
+}
+
+// Função Genérica que aceita o Contrato
+func ExibirDetalhes(g Geometrico) {
+    fmt.Println("--- Forma Geométrica ---")
+    fmt.Printf("Área: %.2f\n", g.Area())
+    fmt.Printf("Perímetro: %.2f\n", g.Perimetro())
+
+    // Type Assertion para fazer algo específico
+    // "Se for um Círculo, mostre o raio"
+    if c, ok := g.(Circulo); ok {
+        fmt.Printf("Raio: %.2f (Específico de Círculo)\n", c.Raio)
+    }
+}
+
+func main() {
+    r := Retangulo{Largura: 10, Altura: 5}
+    c := Circulo{Raio: 3}
+
+    // O compilador aceita ambos, pois ambos implementam Area e Perimetro
+    ExibirDetalhes(r)
+    ExibirDetalhes(c)
+
+    // Exemplo de Interface Vazia
+    var listaGenerica []any
+    listaGenerica = append(listaGenerica, 10)
+    listaGenerica = append(listaGenerica, "Olá")
+    listaGenerica = append(listaGenerica, true)
+
+    fmt.Println("\nLista Genérica:", listaGenerica)
+}
+
+
+========================================
+EXERCÍCIOS
+========================================
+
+1. A Impressora (Fácil)
+
+Crie uma interface Imprimivel com um método Imprimir() string. Crie duas structs: Livro (Titulo, Autor) e Carro (Modelo, Marca). Implemente o método Imprimir para ambas (retorne uma frase bonitinha com os dados). Na main, crie um slice []Imprimivel, coloque um livro e um carro dentro, e use um range para imprimir tudo.
+
+
+2. O Processador de Pagamentos (Médio)
+
+Interface Pagamento com método Pagar(valor float64). Struct Boleto -> Método imprime "Pagando R$ X via Boleto". Struct Cartao -> Método imprime "Pagando R$ X via Cartão". Crie uma função FinalizarCompra(p Pagamento, valor float64). Teste pagando de formas diferentes.
+
+
+3. O Type Switch (Desafio)
+
+Crie uma função Classificar(v any). Use um switch v.(type) para imprimir:
+- Se for string: "É um texto de tamanho X"
+- Se for int: "É um número: dobro = 2X"
+- Se for bool: "É booleano: valor invertido = !X"
+- Default: "Tipo desconhecido"
+Teste chamando a função com vários valores.

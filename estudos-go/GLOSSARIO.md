@@ -92,10 +92,43 @@ Termos e conceitos-chave de cada capítulo, para revisão rápida sem reabrir to
 - **`make` vs `new`**: `make` inicializa Slices, Maps e Channels e retorna o valor (não ponteiro); `new` aloca qualquer tipo e retorna ponteiro.
 - **Regra de Ouro**: use ponteiros quando precisar modificar o original dentro de uma função, ou quando a estrutura for grande demais para copiar. Para tipos pequenos (`int`, `bool`), valores são mais rápidos que ponteiros.
 
-## Capítulo 10
+## Capítulo 10 — Structs
 
-*Conteúdo ainda não transcrito/estudado.*
+- **Struct**: tipo composto que agrupa campos de tipos diferentes sob um nome único. É a "planta baixa" do dado — define a forma, não ocupa memória até ser instanciada.
+- **`type Nome struct { ... }`**: sintaxe de definição. Cria um novo tipo no pacote, tão válido quanto `int` ou `string`.
+- **Instância (literal com nomes)**: `p := Pessoa{Nome: "João", Idade: 30}` — forma preferida; resistente a mudanças na ordem dos campos.
+- **Instância posicional**: `p := Pessoa{"João", 30, 80.5}` — omite nomes dos campos, perigosa se a ordem mudar; evitar.
+- **Zero value de Struct**: `var p Pessoa` inicializa todos os campos com seus zero values (`""`, `0`, `false`, `nil`).
+- **Acesso a campos**: operador ponto `.` — `p.Nome` lê, `p.Idade = 31` escreve.
+- **`%+v`**: verbo de formatação que imprime a struct com os nomes dos campos (ex: `{Nome:João Idade:30}`). Útil para depuração.
+- **Ponteiro para Struct**: `p2 := &p1` — em Go, `p2.Campo` funciona diretamente sem `(*p2).Campo` (o compilador desreferencia automaticamente). Modificar via ponteiro altera o original.
+- **Structs aninhadas**: um campo de uma struct pode ser de outro tipo struct. Acesso encadeado: `u.Endereco.Cidade`.
+- **Struct anônima**: struct sem nome de tipo, criada e usada no mesmo lugar. Útil para dados descartáveis (ex: parse de JSON pontual).
+- **Embedding (Incorporação)**: colocar uma struct dentro de outra sem nome de campo — `type Cachorro struct { Animal; Raca string }`. Gera "Promoted Fields": `cachorro.Vida` funciona diretamente.
+- **Composição sobre Herança**: Go não tem `extends`. Em vez de "Cachorro É um Animal", usa-se "Cachorro TEM um Animal" via Embedding. Mais simples e sem hierarquia de classes.
 
-## Capítulo 11 em diante
+## Capítulo 11 — Métodos
+
+- **Método**: função que pertence a um tipo específico. Sintaxe: `func (receiver Tipo) NomeMetodo() { }`. Transforma dados passivos em agentes com comportamento.
+- **Receiver (Receptor)**: parâmetro extra antes do nome da função que "amarra" o método ao tipo. `(c Cachorro)` diz que `Latir` é propriedade exclusiva de `Cachorro`.
+- **Value Receiver** `(c Tipo)`: Go faz uma cópia do valor para executar o método. Seguro (não altera o original), mas ineficiente para structs grandes e incapaz de modificar estado.
+- **Pointer Receiver** `(c *Tipo)`: Go passa o endereço. Permite modificar o original e é mais eficiente (nenhuma cópia). Regra prática: na dúvida, use Pointer Receiver.
+- **Chamada de método**: `instancia.Metodo()` — Go desreferencia automaticamente ponteiros; `minhaConta.Depositar(50)` funciona mesmo que `minhaConta` seja um valor (não ponteiro), o compilador faz `(&minhaConta).Depositar(50)`.
+- **Métodos em tipos não-struct**: qualquer tipo criado com `type` aceita métodos — `type Dinheiro float64` pode ter `func (d Dinheiro) String() string`. Permite abstrações ricas sobre tipos primitivos.
+- **Getters/Setters**: não são idiomáticos em Go. Campo com letra maiúscula já é público — acesse diretamente (`p.Nome = "Ana"`). Só crie um Setter se houver lógica de validação complexa.
+
+## Capítulo 12 — Interfaces
+
+- **Interface**: tipo que define um conjunto de assinaturas de métodos sem implementação. Qualquer tipo que implementar todos os métodos satisfaz a interface automaticamente — sem declaração explícita.
+- **Contrato**: metáfora para interface. Define O QUE deve ser feito (assinaturas), sem ditar QUEM faz ou COMO faz.
+- **Duck Typing (Tipagem Pato)**: "Se anda como pato e grasna como pato, é um pato." Go adota implementação implícita — nenhum `implements` necessário. O compilador verifica compatibilidade pelo conjunto de métodos.
+- **Polimorfismo**: capacidade de tratar tipos diferentes de maneira uniforme por meio de uma interface comum. Uma função `func f(b Barulhento)` aceita qualquer tipo que implemente `FazerBarulho() string`.
+- **`interface{}` / `any`**: interface vazia — sem requisitos de métodos, aceita qualquer valor. Base do `fmt.Println`. Usar com moderação: remove a segurança de tipos do compilador.
+- **Type Assertion**: extrai o tipo concreto de dentro de uma interface. Forma arriscada: `c := v.(Cachorro)` (panic se errar). Forma segura com comma ok: `c, ok := v.(Cachorro)`.
+- **Type Switch**: `switch v := x.(type)` — testa múltiplos tipos concretos em sequência. Cada `case` recebe o valor já tipado corretamente, sem risco de panic.
+- **Interfaces pequenas**: filosofia do Go — interfaces com 1 ou 2 métodos são mais reutilizáveis. Exemplos canônicos: `io.Reader`, `fmt.Stringer`.
+- **Defina onde usa**: interfaces devem ser criadas no pacote **consumidor**, não no produtor. Isso elimina dependências e permite satisfazer interfaces retroativamente.
+
+## Capítulo 13 em diante
 
 Adicione uma nova seção `## Capítulo XX — Título` seguindo o mesmo padrão a cada capítulo concluído.

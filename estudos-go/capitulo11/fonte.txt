@@ -1,0 +1,214 @@
+Capítulo 11: Métodos - Dando Vida aos Dados
+
+
+Introdução: O Cachorro de Pelúcia vs O Cachorro Real
+
+No capítulo anterior, criamos a struct Cachorro.
+
+	type Cachorro struct {
+		Nome string
+		Raca string
+	}
+
+Isso é legal, mas é passivo. É como um cachorro de pelúcia. Ele tem nome, tem cor, ocupa espaço, mas ele não faz nada. Se você quiser que ele late, você tem que criar uma função externa latir(c Cachorro) e passar o cachorro para ela. É como se você tivesse que pegar o cachorro de pelúcia e apertar a barriga dele manualmente.
+
+E se o cachorro pudesse latir sozinho? E se pudéssemos dizer rex.Latir()?
+
+Em Go, Métodos são funções que pertencem a um tipo específico. É a forma como damos "comportamento" aos nossos dados. Transformamos o objeto inanimado em um agente que sabe fazer coisas.
+
+
+---
+
+
+1. A Sintaxe do "Receiver" (Receptor)
+
+Um método no Go é exatamente igual a uma função, exceto por uma coisa: ele tem um parâmetro extra bem no começo, antes do nome da função. Esse parâmetro especial se chama Receiver.
+
+	// Função Normal
+	func Latir(c Cachorro) {
+		fmt.Println(c.Nome, "diz: Au Au!")
+	}
+
+	// Método (Note o parênteses ANTES do nome Latir)
+	func (c Cachorro) Latir() {
+		fmt.Println(c.Nome, "diz: Au Au!")
+	}
+
+Agora, a chamada fica elegante:
+
+	rex := Cachorro{Nome: "Rex"}
+	rex.Latir()  // Muito mais intuitivo!
+
+O receptor (c Cachorro) diz: "Esta função Latir não é solta no mundo. Ela é propriedade exclusiva do tipo Cachorro. A variável c será a instância que chamou o método."
+
+
+---
+
+
+2. A Grande Decisão: Valor ou Ponteiro?
+
+Aqui voltamos ao dilema do Capítulo 9 (Ponteiros). Quando você define um método, você tem que decidir: "Quando o Rex latir, ele gasta energia? Ele muda por dentro?"
+
+Existem dois tipos de Receivers:
+
+A. Value Receiver (Cópia - Somente Leitura)
+
+Sintaxe: func (c Cachorro) ... O Go faz uma cópia do cachorro para executar o método.
+
+- Vantagem: Seguro. O método não consegue estragar o cachorro original.
+- Desvantagem: Se o cachorro for gigante (muitos dados), copiar é lento. E você não consegue mudar o estado dele.
+
+B. Pointer Receiver (Referência - Leitura e Escrita)
+
+Sintaxe: func (c *Cachorro) ... (Note o asterisco *) O Go passa o endereço do cachorro.
+
+- Vantagem: Rápido (não copia nada) e permite modificar o original.
+- Uso: Use sempre que o método precisa alterar um campo da struct (ex: Comer, Envelhecer).
+
+	// Tenta mudar o nome, mas falha (Cópia)
+	func (c Cachorro) MudarNomeFalho(novoNome string) {
+		c.Nome = novoNome
+		// Aqui mudou a cópia. Ao sair da função, a cópia morre.
+	}
+
+	// Muda o nome de verdade (Ponteiro)
+	func (c *Cachorro) MudarNomeReal(novoNome string) {
+		c.Nome = novoNome
+		// Mudou o original lá na memória.
+	}
+
+Regra Prática: Na dúvida, use Ponteiro Receiver. É mais barato para a memória e mais flexível. Só use Value Receiver para structs muito pequenas (como um Ponto X,Y) que nunca mudam.
+
+
+---
+
+
+3. Métodos em Tipos Não-Struct
+
+O Go é tão flexível que permite colocar métodos em qualquer tipo que você criar, não apenas em Structs.
+
+Digamos que você quer criar um tipo especial para dinheiro, para garantir que sempre seja formatado certo.
+
+	type Dinheiro float64  // Criando um tipo meu baseado em float
+
+	// Adicionando um método ao MEU tipo float
+	func (d Dinheiro) String() string {
+		return fmt.Sprintf("R$ %.2f", d)
+	}
+
+	func main() {
+		var salario Dinheiro = 5000.5
+		fmt.Println(salario.String())  // Imprime: R$ 5000.50
+	}
+
+Isso é poderosíssimo para criar abstrações ricas em cima de tipos primitivos.
+
+
+---
+
+
+Dica do Gopher
+
+[!TIP] Getters e Setters? Relaxa.
+
+Quem vem de Java tem o vício de criar classes com todos os campos privados e fazer: getNome(), setNome(), getIdade(), setIdade().
+
+Em Go, isso não é idiomático. Se o campo Nome começa com letra Maiúscula, ele é Público. Acesse direto: p.Nome = "César".
+
+Só crie métodos "Setters" se houver uma lógica complexa de validação (ex: SetIdade que impede idade negativa). Caso contrário, acesse o campo diretamente. Go preza pela simplicidade.
+
+
+---
+
+
+Exemplos Práticos
+
+Pasta capitulo11, arquivo main.go.
+
+package main
+
+import "fmt"
+
+// Definindo a Struct
+type ContaBancaria struct {
+	Titular string
+	Saldo   float64
+}
+
+// Método Value Receiver (Apenas lê o saldo, não muda nada)
+// É como consultar o extrato.
+func (c ContaBancaria) Extrato() {
+	fmt.Printf("Conta de %s | Saldo: R$ %.2f\n", c.Titular, c.Saldo)
+}
+
+// Método Pointer Receiver (ALTERA o saldo)
+// É como fazer um depósito.
+func (c *ContaBancaria) Depositar(valor float64) {
+	if valor > 0 {
+		c.Saldo += valor
+		fmt.Println("Depósito realizado com sucesso.")
+	} else {
+		fmt.Println("Valor inválido para depósito.")
+	}
+}
+
+// Método Pointer Receiver (ALTERA o saldo)
+// É como fazer um saque. Retorna erro se não tiver saldo.
+func (c *ContaBancaria) Sacar(valor float64) bool {
+	if c.Saldo >= valor {
+		c.Saldo -= valor
+		fmt.Println("Saque realizado.")
+		return true
+	}
+	fmt.Println("Saldo insuficiente!")
+	return false
+}
+
+func main() {
+	// Criando a conta
+	minhaConta := ContaBancaria{
+		Titular: "César",
+		Saldo:   100.00,
+	}
+
+	// 1. Consultando (Value Receiver)
+	minhaConta.Extrato()
+
+	// 2. Depositando (Pointer Receiver - Muda o saldo)
+	minhaConta.Depositar(50.00)
+	minhaConta.Extrato()  // Deve ser 150.00
+
+	// 3. Sacando
+	sucesso := minhaConta.Sacar(200.00)  // Tenta sacar mais do que tem
+	if !sucesso {
+		fmt.Println("Preciso trabalhar mais...")
+	}
+
+	// Saldo continua 150
+	minhaConta.Extrato()
+}
+
+
+---
+
+
+Exercícios
+
+1. O Carro Acelerado (Fácil)
+
+Crie uma struct Carro com campo VelocidadeAtual (int). Crie um método Acelerar() que aumente a velocidade em 10. Crie um método Frear() que diminua em 10 (mas não deixe ficar negativo). Na main, instancie o carro, acelere 3 vezes e freie 1 vez. Imprima a velocidade final.
+
+
+2. O Relógio Digital (Médio)
+
+Crie uma struct Relogio com Horas e Minutos. Crie um método AdicionarMinutos(m int). O método deve somar os minutos. Se passar de 60, deve incrementar a hora e zerar os minutos (ou manter o resto). Se passar de 24h, deve voltar para 00h. Exemplo: 23:50 + 20min -> 00:10. Dica: Use operador módulo %.
+
+
+3. A Calculadora Orientada a Métodos (Conceito)
+
+Em vez de funções soltas soma(a, b), crie uma struct Calculadora que mantém um histórico. type Calculadora struct { Resultado float64 } Métodos:
+- Somar(v float64) -> soma ao Resultado interno.
+- Subtrair(v float64) -> subtrai.
+- Limpar() -> zera.
+
+Na main: calc.Somar(10), calc.Somar(5), calc.Subtrair(2). Imprima o calc.Resultado final (deve ser 13).

@@ -1,0 +1,235 @@
+Capítulo 10: Structs - A Ficha do Paciente
+
+
+Introdução: O Caos das Variáveis Soltas
+
+Imagine que você é um médico. Entra o primeiro paciente, o Sr. João. Você anota num papel: nome1 = "João", idade1 = 45, peso1 = 80.5. Aí entra a Dona Maria. Você anota: nome2 = "Maria", idade2 = 50, peso2 = 65.0.
+
+Depois de 100 pacientes, você tem 300 variáveis soltas voando pelo seu código. Se você quiser passar os dados do João para um especialista, você tem que passar 3 variáveis separadas. Se você esquecer o peso, o especialista pode receitar o remédio errado. É uma bagunça completa.
+
+Não seria melhor ter uma Pasta Amarela física para cada paciente, contendo dentro dela os formulários de Nome, Idade e Peso grampeados juntos? Assim, você entrega a Pasta inteira para o especialista.
+
+Em Go, essa pasta amarela se chama Struct (Estrutura). É a forma como criamos nossos próprios tipos de dados, juntando tipos básicos (int, string, bool) em uma entidade lógica coerente.
+
+
+---
+
+
+1. Definindo uma Struct
+
+A definição é a "planta baixa" ou o "modelo do formulário". Ela não ocupa memória ainda, ela apenas diz ao Go como a estrutura deve ser.
+
+	// type [Nome] struct { ... }
+	type Pessoa struct {
+		Nome  string
+		Idade int
+		Peso  float64
+	}
+
+Agora, Pessoa é um tipo no seu programa, tão válido quanto int ou string. Você pode criar variáveis do tipo Pessoa.
+
+
+---
+
+
+2. Criando Instâncias (Preenchendo o Formulário)
+
+Existem algumas formas de criar uma "instância" (uma pasta concreta) desse modelo.
+
+Forma 1: Literal (A mais comum)
+
+	cliente := Pessoa{
+		Nome:  "João",
+		Idade: 30,
+		Peso:  80.5,
+	}
+
+Forma 2: O Jeito Rápido (Perigoso)
+
+Você pode omitir os nomes dos campos, mas tem que colocar os dados na ordem exata da definição.
+
+	cliente := Pessoa{"César", 30, 80.5}
+
+Alerta: Se amanhã você mudar a struct e inverter Idade e Peso, esse código quebra silenciosamente ou buga. Evite.
+
+Forma 3: Zero Value
+
+	var cliente Pessoa
+	// cliente.Nome é ""
+	// cliente.Idade é 0
+
+
+---
+
+
+3. Acessando os Campos
+
+Simples e direto, usando o ponto (.).
+
+	fmt.Println(cliente.Nome)
+	cliente.Idade = 31  // Fez aniversário
+
+
+---
+
+
+4. Structs Aninhadas (A Boneca Russa)
+
+Você pode colocar uma struct dentro de outra. Imagine que o endereço é complexo demais para ser só uma string.
+
+	type Endereco struct {
+		Rua    string
+		Cidade string
+	}
+
+	type Usuario struct {
+		Nome     string
+		Endereco Endereco  // Uma struct dentro da outra!
+	}
+
+Para acessar:
+
+	u := Usuario{
+		Nome: "Ana",
+		Endereco: Endereco{
+			Rua:    "Rua das Flores",
+			Cidade: "São Paulo",
+		},
+	}
+
+	fmt.Println(u.Endereco.Cidade)  // Acessando em profundidade
+
+
+---
+
+
+5. Structs Anônimas (O Guardanapo)
+
+Às vezes você precisa de uma estrutura rápida para usar uma única vez (talvez para decodificar um JSON que veio da web) e não quer sujar seu código criando um type formal. Você pode criar uma struct "descartável".
+
+	pet := struct {
+		Nome string
+		Raca string
+	}{
+		Nome: "Rex",
+		Raca: "Vira-lata",
+	}
+	// Essa struct não tem nome de tipo. Ela só existe aqui.
+
+
+---
+
+
+Dica do Gopher
+
+[!TIP] Composição sobre Herança
+
+Se você vem de Java ou C#, deve estar procurando a palavra extends para fazer herança de classes (Cachorro extends Animal). Pare. Go não tem herança. Go usa Composição.
+
+Em vez de dizer que Cachorro É um Animal, dizemos que Cachorro TEM um Animal.
+
+	type Animal struct {
+		Vida int
+	}
+
+	type Cachorro struct {
+		Animal  // Embedding (Incorporação)
+		Raca    string
+	}
+
+O Go faz uma mágica aqui ("Promoted Fields"). Você pode acessar cachorro.Vida diretamente, como se fosse dele. É muito mais simples e evita a "hierarquia infernal" de classes da POO tradicional.
+
+
+---
+
+
+Exemplos Práticos
+
+Pasta capitulo10, arquivo main.go.
+
+package main
+
+import "fmt"
+
+// Definição do Molde
+type Produto struct {
+	Nome      string
+	Preco     float64
+	EmEstoque int
+	Ativo     bool
+}
+
+// Struct Aninhada
+type Pedido struct {
+	ID      int
+	Cliente string
+	Itens   []Produto  // Um Slice de Produtos!
+}
+
+func main() {
+	// 1. Criando um Produto
+	p1 := Produto{
+		Nome:      "Teclado Mecânico",
+		Preco:     250.00,
+		EmEstoque: 10,
+		Ativo:     true,
+	}
+
+	// 2. Imprimindo (O %+v é um truque para ver os nomes dos campos)
+	fmt.Printf("Produto Detalhado: %+v\n", p1)
+
+	// 3. Ponteiro para Struct (Muito comum para evitar cópia)
+	// Vamos criar um ponteiro p2 que aponta para o p1
+	p2 := &p1
+
+	// Em C, teríamos que usar (*p2).Preco.
+	// Em Go, o compilador é gentil e deixa usar p2.Preco direto.
+	p2.Preco = 200.00  // Isso altera o p1 original!
+
+	fmt.Println("Preço alterado no original:", p1.Preco)
+
+	// 4. Pedido com Lista de Itens
+	pedido := Pedido{
+		ID:      1001,
+		Cliente: "Roberto",
+		Itens: []Produto{
+			p1,
+			{Nome: "Mouse", Preco: 50.0},  // Criando struct inline
+		},
+	}
+
+	// Calculando total do pedido
+	total := 0.0
+	for _, item := range pedido.Itens {
+		total += item.Preco
+	}
+	fmt.Printf("Total do Pedido %d: R$ %.2f\n", pedido.ID, total)
+}
+
+
+---
+
+
+Exercícios
+
+1. O Cadastro de Gamer (Fácil)
+
+Crie uma struct Jogador com:
+- Nickname (string)
+- Nivel (int)
+- Vivo (bool)
+
+Instancie um jogador chamado "NoobMaster", nível 1, Vivo=true. Imprima os dados.
+
+
+2. A Comparação de Retângulos (Médio)
+
+Crie uma struct Retangulo com Largura e Altura. Crie uma função calcularArea(r Retangulo) int que retorna a área (L * A). No main, crie dois retângulos diferentes. Use um if para imprimir qual dos dois tem a maior área.
+
+
+3. O Sistema de Playlist (Desafio)
+
+Crie uma struct Musica (Titulo, Artista, DuracaoEmSegundos). Crie uma struct Playlist (Nome, Musicas []Musica). Instancie uma playlist "Rock" com 3 músicas. Crie um loop que percorra a playlist e imprima:
+- Nome da música.
+- Nome do artista.
+- No final, a duração TOTAL da playlist em minutos (TotalSegundos / 60).

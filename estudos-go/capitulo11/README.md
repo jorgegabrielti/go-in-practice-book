@@ -1,4 +1,4 @@
-# 📖 Capítulo 10: Structs — A Ficha do Paciente
+# 📖 Capítulo 11: Métodos — Dando Vida aos Dados
 
 > **Livro Go na Prática: 30 capítulos para dominar a linguagem**
 
@@ -11,7 +11,7 @@
 > 4. Produzir o artigo de Medium e o post de LinkedIn em `conteudo/`, **sempre baseados no `fonte.txt`** — não em memória ou suposição do que o livro disse, e **escritos com palavras próprias** (sem copiar/parafrasear de perto o `fonte.txt`).
 > 5. Rastrear a execução de todo o código do capítulo em `teste-de-mesa.md`, prevendo a saída linha a linha antes de rodar `go run`.
 
-> 🧮 [Teste de mesa de todo o código deste capítulo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/teste-de-mesa.md)
+> 🧮 [Teste de mesa de todo o código deste capítulo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/teste-de-mesa.md)
 
 *Aguardando a transcrição do conteúdo do livro em `fonte.txt` para iniciar os estudos deste capítulo.*
 
@@ -44,14 +44,14 @@ Observação prática, armadilha comum ou boa prática relacionada ao capítulo.
 
 ## 🔬 Exemplos Práticos no Repositório
 
-### 1. [Exemplo 01: Nome](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/exemplos/ex01/main.go)
+### 1. [Exemplo 01: Nome](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exemplos/ex01/main.go)
 *   **Conceito:** descrição.
 
 ---
 
 ## 🔬 Exercícios Práticos Resolvidos
 
-### 1. [Exercício 01: Nome](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/exercicios/ex01/main.go)
+### 1. [Exercício 01: Nome](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exercicios/ex01/main.go)
 *   **Objetivo:** o que o exercício pede.
 *   **Conceito:** o que ele pratica.
 
@@ -67,8 +67,8 @@ Observação prática, armadilha comum ou boa prática relacionada ao capítulo.
 - [ ] `go fmt ./...` executado
 - [ ] Termos novos adicionados ao `estudos-go/GLOSSARIO.md`
 - [ ] Painel de progresso no `README.md` raiz atualizado
-- [ ] Artigo de Medium criado em `conteudo/medium/capitulo10.md` (a partir do `_template.md`, baseado no `fonte.txt`)
-- [ ] Post de LinkedIn criado em `conteudo/linkedin/capitulo10.md` (a partir do `_template.md`, baseado no `fonte.txt`)
+- [ ] Artigo de Medium criado em `conteudo/medium/capitulo11.md` (a partir do `_template.md`, baseado no `fonte.txt`)
+- [ ] Post de LinkedIn criado em `conteudo/linkedin/capitulo11.md` (a partir do `_template.md`, baseado no `fonte.txt`)
 - [ ] Status atualizado em `conteudo/PAINEL.md`
-- [ ] Pilha de exercícios extras (mín. 10, dificuldade crescente) criada em `pilha-exercicios/capitulo10.md`
+- [ ] Pilha de exercícios extras (mín. 10, dificuldade crescente) criada em `pilha-exercicios/capitulo11.md`
 - [ ] Teste de mesa de todo o código do capítulo criado em `teste-de-mesa.md`
