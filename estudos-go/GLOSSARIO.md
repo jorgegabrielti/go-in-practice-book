@@ -129,6 +129,22 @@ Termos e conceitos-chave de cada capítulo, para revisão rápida sem reabrir to
 - **Interfaces pequenas**: filosofia do Go — interfaces com 1 ou 2 métodos são mais reutilizáveis. Exemplos canônicos: `io.Reader`, `fmt.Stringer`.
 - **Defina onde usa**: interfaces devem ser criadas no pacote **consumidor**, não no produtor. Isso elimina dependências e permite satisfazer interfaces retroativamente.
 
-## Capítulo 13 em diante
+## Capítulo 13 — Tratamento de Erros: Sem Pânico!
+
+- **Errors as Values**: filosofia do Go em que erros são variáveis de retorno comuns — não mecanismos de controle de fluxo especiais. Torna falhas explícitas na assinatura da função.
+- **`error`**: interface builtin com um único método `Error() string`. Qualquer tipo que implemente esse método é um erro válido em Go.
+- **`errors.New`**: cria um erro simples com mensagem fixa. Ideal para sentinel errors que serão comparados com `errors.Is`.
+- **`fmt.Errorf` + `%w`**: cria um erro com mensagem dinâmica e "embrulha" (wrap) um erro existente. O `%w` preserva a identidade do erro original na cadeia para inspeção com `errors.Is` e `errors.As`.
+- **Sentinel Error**: variável de erro pré-declarada no nível do pacote (ex: `var ErrNaoEncontrado = errors.New("...")`). Permite comparação direta com `errors.Is`.
+- **`errors.Is`**: verifica se um erro (ou qualquer erro na cadeia de wrapping) é igual a um sentinel específico.
+- **`errors.As`**: extrai um tipo de erro concreto da cadeia de wrapping — para acessar campos de um tipo customizado.
+- **`panic`**: interrompe o fluxo do programa imediatamente e começa a desfazer a pilha de chamadas. Reservado para erros irrecuperáveis (bugs graves, estado corrompido).
+- **`recover`**: captura um `panic` em andamento, impedindo que o programa encerre. Só funciona quando chamado diretamente dentro de uma função `defer`.
+- **`defer`**: agenda a execução de uma função para o último momento antes do retorno da função atual — não importa se foi `return` normal, `return` com erro ou `panic`. Múltiplos `defer` executam em ordem LIFO.
+- **LIFO (Last In, First Out)**: a pilha de `defer`s — o último registrado é o primeiro a executar.
+- **Line of Sight**: padrão idiomático do Go de tratar erros com retorno antecipado, deixando o caminho feliz ("Happy Path") na coluna esquerda, sem `else` aninhado.
+- **Happy Path**: o fluxo de execução sem erros — em Go idiomático, é o fluxo que fica sem indentação extra, na margem esquerda do código.
+
+## Capítulo 14 em diante
 
 Adicione uma nova seção `## Capítulo XX — Título` seguindo o mesmo padrão a cada capítulo concluído.

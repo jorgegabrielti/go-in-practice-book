@@ -33,7 +33,8 @@ Os exercícios em `estudos-go/capituloXX/exercicios/` são os propostos pelo pr�
 | 10 | 12 | [capitulo10.md](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/pilha-exercicios/capitulo10.md) |
 | 11 | 12 | [capitulo11.md](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/pilha-exercicios/capitulo11.md) |
 | 12 | 12 | [capitulo12.md](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/pilha-exercicios/capitulo12.md) |
-| 13+ | — | Criar a partir de `_template.md` quando o capítulo for concluído |
+| 13 | 12 | [capitulo13.md](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/pilha-exercicios/capitulo13.md) |
+| 14+ | — | Criar a partir de `_template.md` quando o capítulo for concluído |
 
 ## Como usar
 

@@ -69,7 +69,7 @@ go fmt ./...
 
 ## 📊 Painel de Progresso (30 Capítulos)
 
-**Progresso Atual:** `[████████████░░░░░░░░░░]` **40%** (12 de 30 capítulos concluídos)
+**Progresso Atual:** `[█████████████░░░░░░░░░]` **43%** (13 de 30 capítulos concluídos)
 
 | Capítulo | Título | Status | Recursos Disponíveis |
 | :---: | :--- | :---: | :---: |
@@ -85,8 +85,8 @@ go fmt ./...
 | **10** | **Structs — A Ficha do Paciente** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo10/exercicios) |
 | **11** | **Métodos — Dando Vida aos Dados** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exercicios) |
 | **12** | **Interfaces — O Plugue Universal** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/exercicios) |
-| **13** | Capítulo 13 | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/README.md) |
-| **14** | Capítulo 14 | 🔴 *Não Iniciado* | *A ser criado* |
+| **13** | **Tratamento de Erros — Sem Pânico!** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/exercicios) |
+| **14** | Capítulo 14 | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo14/README.md) |
 | **15** | Capítulo 15 | 🔴 *Não Iniciado* | *A ser criado* |
 | **16** | Capítulo 16 | 🔴 *Não Iniciado* | *A ser criado* |
 | **17** | Capítulo 17 | 🔴 *Não Iniciado* | *A ser criado* |

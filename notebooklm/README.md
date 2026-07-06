@@ -37,5 +37,7 @@ O livro *Go na Prática* é excelente: conciso, direto, cheio de boas analogias.
 | 09 | Ponteiros | [capitulo09.md](capitulo09.md) |
 | 10 | Structs | [capitulo10.md](capitulo10.md) |
 | 11 | Métodos | [capitulo11.md](capitulo11.md) |
+| 12 | Interfaces | [capitulo12.md](capitulo12.md) |
+| 13 | Tratamento de Erros | [capitulo13.md](capitulo13.md) |
 
 > Novos arquivos são adicionados a cada capítulo concluído.

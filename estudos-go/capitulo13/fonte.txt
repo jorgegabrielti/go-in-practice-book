@@ -1,0 +1,203 @@
+Capítulo 13: Tratamento de Erros - Sem Pânico!
+
+INTRODUÇÃO: O ALARME DE INCÊNDIO VS. O RELATÓRIO DE PROBLEMAS
+
+Imagine que você está em um escritório trabalhando. De repente, a impressora quebra.
+
+Em linguagens como Java, Python ou C# (que usam Exceções), a impressora começa a gritar e disparar o alarme de incêndio (Throw Exception). Todo mundo para de trabalhar, corre para as saídas de emergência e procura alguém superior (Catch) para desligar o alarme. O fluxo de trabalho é interrompido violentamente.
+
+Em Go, a filosofia é diferente. Quando a impressora quebra, ela simplesmente imprime um papelzinho dizendo: "Erro: Sem tinta". Ela entrega esse papelzinho para você junto com o seu documento (que veio em branco). Você olha o papelzinho e decide o que fazer:
+1. Colocar tinta?
+2. Desistir de imprimir?
+3. Avisar o chefe?
+
+Você trata o problema ali mesmo, localmente, sem parar a empresa inteira.
+
+Isso é o conceito de "Errors as Values" (Erros como Valores). Um erro não é uma catástrofe mágica. É apenas uma variável, como um número ou uma string, que você pode ler e passar adiante.
+
+---
+
+1. O TIPO error
+
+Em Go, error é uma interface (lembra do capítulo anterior?). Qualquer coisa que tenha um método Error() string é um erro.
+
+O caso mais comum é ver funções retornando dois valores:
+    func AbrirArquivo(nome string) (Arquivo, error)
+
+E o padrão de verificação onipresente:
+    arquivo, err := AbrirArquivo("receita_bolo.txt")
+    if err != nil {
+        // Opa, o papelzinho veio preenchido (não é nulo). Temos um problema.
+        fmt.Println("Não consegui abrir o arquivo:", err)
+        return // Encerra a função atual
+    }
+    // Se chegou aqui, 'err' é nil (nulo). Tudo certo!
+    // Podemos usar 'arquivo' com segurança.
+
+---
+
+2. CRIANDO SEUS PRÓPRIOS ERROS
+
+Existem duas formas principais de criar um aviso de erro para retornar nas suas funções.
+
+A. Erro Simples (errors.New)
+Quando você só precisa de uma frase fixa.
+
+    import "errors"
+    var ErrSemGasolina = errors.New("tanque vazio")
+
+B. Erro Formatado (fmt.Errorf)
+Quando você quer dar mais detalhes (contexto).
+
+    usuario := "César"
+    // O %w é um verbo especial para "embrulhar" (wrap) erro, útil para inspeção avançada.
+    return fmt.Errorf("falha ao logar usuario %s: senha incorreta", usuario)
+
+---
+
+3. O PÂNICO (panic) - A OPÇÃO NUCLEAR
+
+Ok, dissemos que Go não tem exceções. Mas e se o avião perder as duas asas? E se o banco de dados explodir? E se tentarmos acessar um índice que não existe num array?
+
+Para erros irrecuperáveis, o Go tem o panic. O panic é o alarme de incêndio. Ele para o programa imediatamente e começa a derrubar tudo.
+
+    // Só use isso se for IMPOSSÍVEL continuar rodando o programa.
+    panic("O servidor pegou fogo!")
+
+Regra de Ouro: Não use panic para controle de fluxo normal (como "arquivo não encontrado" ou "usuário inválido"). Use apenas para bugs lógicos gravíssimos ou estado corrompido.
+
+recover - O Bombeiro
+Você pode "segurar" um panic antes que ele feche o programa usando recover. Isso é feito geralmente apenas em servidores web para evitar que uma requisição ruim derrube o site inteiro.
+
+---
+
+4. defer - A LIMPEZA GARANTIDA
+
+Imagine que você abriu um arquivo. Você precisa fechá-lo quando terminar, senão ele fica travado na memória (Memory Leak). Mas e se der erro no meio da função e você der um return antes de fechar?
+
+O defer (adiar) agenda uma tarefa para ser executada no último segundo, antes da função terminar, não importa o que aconteça.
+
+    func LerArquivo() {
+        arquivo := abrir("dados.txt")
+        // AGENDA o fechamento para o final da função
+        defer arquivo.Fechar()
+
+        // Pode fazer o que quiser, dar erro, dar return...
+        // O 'arquivo.Fechar()' VAI rodar na saída.
+        processar(arquivo)
+    }
+
+É extremamente elegante para limpeza de recursos (fechar conexões de banco, arquivos, destravar mutex).
+
+---
+
+DICA DO GOPHER: Evite o "Else" no Tratamento de Erros
+
+Iniciantes costumam escrever assim:
+    if err != nil {
+        tratarErro()
+    } else {
+        funciona()
+    }
+
+O padrão idiomático do Go é "Line of Sight" (Linha de Visão). Trate o erro, retorne, e deixe o caminho feliz ("Happy Path") na identação principal (na esquerda).
+
+    if err != nil {
+        return err
+    }
+    // Caminho feliz continua aqui, sem else e sem ninhos.
+    funciona()
+
+---
+
+EXEMPLOS PRÁTICOS (capitulo13/main.go):
+
+package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+// Erro customizado (sentinel error)
+// É boa prática criar variáveis para erros conhecidos para poder comparar depois
+var ErrDivisaoPorZero = errors.New("matemática diz não: divisão por zero")
+
+// Função que pode falhar
+func dividir(a, b float64) (float64, error) {
+    if b == 0 {
+        return 0, ErrDivisaoPorZero
+    }
+    return a / b, nil
+}
+
+// Função simulando algo perigoso
+func operacaoArriscada() {
+    // Defer + Recover: O cinto de segurança
+    defer func() {
+        // recover() pega o valor do panic, se houver um
+        if r := recover(); r != nil {
+            fmt.Println("🚒 OPA! Recuperei de um pânico:", r)
+        }
+    }()
+
+    fmt.Println("Iniciando operação nuclear...")
+    panic("EXPLOSÃO NO REATOR 4!") // Simula um crash fatal
+    fmt.Println("Isso nunca será impresso.")
+}
+
+func main() {
+    // 1. Tratamento Padrão
+    resultado, err := dividir(10, 0)
+
+    if err != nil {
+        // Podemos verificar se é um erro específico!
+        if errors.Is(err, ErrDivisaoPorZero) {
+            fmt.Println("Erro Específico: Você tentou dividir por zero.")
+        } else {
+            fmt.Println("Erro Genérico:", err)
+        }
+    } else {
+        fmt.Println("Resultado:", resultado)
+    }
+
+    // 2. Testando Panic e Recover
+    fmt.Println("\n--- Teste de Pânico ---")
+    operacaoArriscada()
+    fmt.Println("O programa continuou rodando! O recover salvou o dia.")
+
+    // 3. Defer na Prática
+    fmt.Println("\n--- Teste de Defer ---")
+    // Função anônima auto-executável para isolar escopo
+    func() {
+        fmt.Println("Abrindo porta...")
+        defer fmt.Println("Fechando porta (Defer).") // Vai pro final da fila
+
+        fmt.Println("Entrando na casa...")
+        fmt.Println("Fazendo bagunça...")
+    }() // Fecha parênteses executa a função agora
+}
+
+---
+
+EXERCÍCIOS:
+
+1. A Compra Segura (Fácil)
+Crie uma função Comprar(saldo, preco float64) (novoSaldo float64, err error).
+- Se preco > saldo: Retorne saldo original e um erro errors.New("saldo insuficiente").
+- Caso contrário: Retorne saldo - preco e nil.
+Teste na main com casos que dão certo e errado.
+
+2. O Validador de Senha (Médio)
+Crie uma função ValidarSenha(senha string) error. Regras:
+- Se tamanho < 8: Retorne erro "senha muito curta".
+- Se não tiver números (opcional, só se quiser desafio): Retorne "senha precisa de número".
+- Se passar: Retorne nil.
+Use fmt.Errorf para incluir o tamanho atual da senha na mensagem de erro
+("senha muito curta: tem apenas 3 caracteres").
+
+3. A Pilha de Pratos (defer) - Desafio Conceitual
+O defer funciona como uma pilha (LIFO - Last In, First Out). O último a entrar é o primeiro a sair.
+Escreva um loop for de 0 a 4. Dentro do loop, coloque defer fmt.Println(i).
+Imprima "Fim do Loop". Rode o programa e observe a ordem que os números aparecem.
+Explique por que a contagem sai invertida (4, 3, 2, 1, 0).
