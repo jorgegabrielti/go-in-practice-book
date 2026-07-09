@@ -145,6 +145,49 @@ Termos e conceitos-chave de cada capítulo, para revisão rápida sem reabrir to
 - **Line of Sight**: padrão idiomático do Go de tratar erros com retorno antecipado, deixando o caminho feliz ("Happy Path") na coluna esquerda, sem `else` aninhado.
 - **Happy Path**: o fluxo de execução sem erros — em Go idiomático, é o fluxo que fica sem indentação extra, na margem esquerda do código.
 
-## Capítulo 14 em diante
+## Capítulo 14 — Pacotes e Módulos: Sua Caixa de Ferramentas
+
+- **Pacote (Package)**: pasta contendo arquivos `.go` com o mesmo `package` declarado. É a unidade de organização de código em Go — cada pasta é um pacote.
+- **Módulo (Module)**: o projeto inteiro, identificado pelo arquivo `go.mod`. Um módulo pode conter vários pacotes.
+- **`go.mod`**: arquivo que define o nome canônico do módulo e lista suas dependências externas. Criado com `go mod init`.
+- **`go.sum`**: arquivo com checksums criptográficos (SHA-256) de todas as dependências. Garante integridade — impede supply chain attacks. Deve ser commitado.
+- **Exportado (Exported)**: identificador com letra inicial maiúscula — acessível por outros pacotes. Equivalente ao `public` de outras linguagens.
+- **Não-exportado (Unexported)**: identificador com letra inicial minúscula — visível apenas dentro do próprio pacote. Verificado pelo compilador.
+- **`go get`**: comando que baixa uma dependência externa, registra no `go.mod` e atualiza o `go.sum`.
+- **`go mod tidy`**: sincroniza o `go.mod` com o código real — baixa dependências faltantes e remove as não utilizadas.
+- **Import path**: caminho completo para importar um pacote: `"nome-do-modulo/nome-da-pasta"`. Ex: `"github.com/usuario/calc/matematica"`.
+- **`internal/`**: pasta especial cujos pacotes só podem ser importados por código dentro do mesmo módulo. Cria APIs privadas ao módulo.
+- **`init()`**: função especial executada automaticamente pelo Go ao importar o pacote, antes do `main()`. Sem parâmetros, sem retorno, não pode ser chamada explicitamente.
+- **Semver (Semantic Versioning)**: sistema de versões `MAJOR.MINOR.PATCH` adotado pelo Go Modules. Quebra de API incrementa `MAJOR` e muda o import path (`/v2`, `/v3`).
+- **`replace` (go.mod)**: diretiva que redireciona o import de um módulo para um caminho local ou versão alternativa. Útil para desenvolvimento simultâneo de módulos.
+- **`package utils` (anti-pattern)**: prática de criar um pacote genérico com tudo que não tem lugar — vira "gaveta da bagunça". Preferir nomes semânticos por domínio.
+
+## Capítulo 15 — Goroutines: A Cozinha Frenética e o Mágico Invisível
+
+- **Goroutine**: unidade de execução concorrente do Go — uma "thread verde" gerenciada pelo runtime, não pelo sistema operacional. Começa com ~2KB de memória (vs. ~1MB de uma thread de SO).
+- **Thread Verde (Green Thread)**: thread implementada no espaço do usuário, não pelo SO. O runtime Go as gerencia e as mapeia em threads de SO reais.
+- **Go Runtime Scheduler**: componente do runtime Go que distribui goroutines entre threads de SO disponíveis. Invisível ao programador — você usa `go`, ele cuida do resto.
+- **Modelo M:N**: estratégia de multiplexação onde M goroutines são executadas em N threads de SO (onde N ≈ número de núcleos). Permite escalar para milhões de goroutines com poucos recursos.
+- **`runtime.GOMAXPROCS(n)`**: controla quantos núcleos de CPU o Go pode usar simultaneamente. Padrão: todos os núcleos disponíveis (`runtime.NumCPU()`). Valor `0` retorna o atual sem alterar.
+- **Goroutine anônima**: goroutine lançada com uma função literal (closure): `go func() { ... }()`. Os `()` finais são obrigatórios — chamam a função no momento do lançamento.
+- **Gotcha de closure em loop**: bug clássico onde goroutines anônimas dentro de `for` capturam a variável do loop por referência. Quando rodam, o loop já terminou e todas lêem o mesmo valor final. Correção: passar a variável como parâmetro da função anônima.
+- **Problema "Tchau, Obrigado"**: a goroutine `main` é a goroutine raiz — quando ela retorna, o runtime encerra todo o programa imediatamente, sem esperar goroutines filhas. Solução temporária: `time.Sleep`. Solução idiomática: `sync.WaitGroup` (Cap 18).
+- **Goroutine leak**: goroutine que nunca termina e nunca é coletada, consumindo memória e CPU indefinidamente. Causa comum: goroutine bloqueada em canal que jamais recebe/envia dados.
+- **Concorrência**: design do programa para lidar com múltiplas tarefas que progridem de forma intercalada. Não exige múltiplos núcleos.
+- **Paralelismo**: execução simultânea real de múltiplas tarefas em múltiplos núcleos ao mesmo instante. Depende de hardware.
+
+## Capítulo 16 — Channels: O Mensageiro Confiável
+
+- **Channel (Canal)**: tubo de comunicação tipado usado para trocar dados e sincronizar a execução entre Goroutines de forma segura.
+- **Operador da Seta (`<-`)**: operador usado para enviar (`c <- dado`) ou receber (`dado := <-c`) dados através de um canal.
+- **Bloqueio (Blocking)**: comportamento padrão de canais sem buffer (*unbuffered*), onde o envio bloqueia até que um receptor esteja pronto e o recebimento bloqueia até que um emissor envie um dado.
+- **Deadlock**: erro em tempo de execução (*fatal error*) que ocorre quando todas as goroutines do programa ficam permanentemente bloqueadas/adormecidas esperando por operações que nunca vão acontecer.
+- **`close(c)`**: função usada pelo remetente para sinalizar que não serão mais enviados dados pelo canal. Tentar enviar após o fechamento gera um *panic*.
+- **Leitura com `for range`**: loop conveniente que recebe dados do canal de forma contínua e encerra-se automaticamente quando o canal é fechado.
+- **Canais Direcionais**: especificação de permissões do canal nas assinaturas de funções para aumentar a robustez: `chan<- T` (só envia) e `<-chan T` (só recebe).
+
+---
+
+## Capítulo 17 em diante
 
 Adicione uma nova seção `## Capítulo XX — Título` seguindo o mesmo padrão a cada capítulo concluído.

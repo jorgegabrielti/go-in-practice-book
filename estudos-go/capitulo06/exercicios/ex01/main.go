@@ -2,15 +2,15 @@ package main
 
 import "fmt"
 
-func soma(a, b int)(int) {
-  return a + b	
+func soma(a, b int) int {
+	return a + b
 }
 
-func subtracao(a, b int)(int) {
+func subtracao(a, b int) int {
 	return a - b
 }
 
-func multiplicacao(a, b int)(int) {
+func multiplicacao(a, b int) int {
 	return a * b
 }
 

@@ -25,7 +25,7 @@ func main() {
 	fmt.Println("O que tem no endereço: ", *ponteiro)
 
 	//2. Mudando valor via ponteiro
-	*ponteiro = 100 // Alterando indiretamente
+	*ponteiro = 100                               // Alterando indiretamente
 	fmt.Println("Novo valor de número: ", numero) // Mágica! Mudou para 100
 
 	//3. Teste Valor vs Referência
@@ -35,7 +35,7 @@ func main() {
 	zerarValor(a)
 	zerarPonteiro(&b) // Passamos o endereço de b (&b)
 
-	fmt.Println("A (Valor): ", a) // Continua 10
+	fmt.Println("A (Valor): ", a)   // Continua 10
 	fmt.Println("B(Ponteiro): ", b) // Virou 0
 
 	//4. Ponteiro de Ponteiro (Inception) - Só por curiosidade

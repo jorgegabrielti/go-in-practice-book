@@ -1,0 +1,189 @@
+Capítulo 14: Pacotes e Módulos - Sua Caixa de Ferramentas
+
+INTRODUÇÃO: A OFICINA BAGUNÇADA
+
+Imagine uma oficina mecânica onde todas as ferramentas do mundo — chaves de fenda, serras, martelos, parafusos de todos os tamanhos — estão jogadas em uma única pilha gigante no centro da sala. Para consertar um carro, você leva horas só para achar a chave certa.
+
+Isso é o que acontece quando você escreve todo o seu código em um único arquivo main.go. Funciona para programas pequenos (como nossos exercícios até agora), mas é inviável para sistemas reais.
+
+Para organizar o caos, precisamos de Gavetas e Compartimentos. Em Go:
+
+- Pacote (Package): É uma pasta contendo arquivos .go. É como uma gaveta específica ("Gaveta de Elétrica", "Gaveta de Pintura").
+- Módulo (Module): É a oficina inteira. É o conjunto de todos os pacotes do seu projeto.
+
+---
+
+1. O go.mod (O RG do Projeto)
+
+Antes de criar pastas, você precisa dizer ao Go que aquela pasta raiz é um projeto oficial. Fazemos isso criando um arquivo go.mod.
+
+O go.mod faz duas coisas:
+1. Dá um Nome Oficial ao seu projeto (geralmente uma URL, como github.com/cesar/meuprojeto).
+2. Lista as Dependências (bibliotecas de outras pessoas que você está usando).
+
+No terminal, na raiz do projeto:
+    go mod init github.com/seu-usuario/calculadora
+
+Isso cria o arquivo go.mod. Agora o Go sabe quem você é.
+
+---
+
+2. A REGRA DE OURO DA VISIBILIDADE
+
+Em Go, não existem palavras-chave como public, private ou protected. Os criadores acharam isso verboso demais.
+
+Eles criaram uma regra visual genial:
+- Letra Maiúscula: PÚBLICO (Exportado). Pode ser usado por outros pacotes.
+- Letra Minúscula: PRIVADO (Não-Exportado). Só pode ser usado dentro da própria pasta (pacote).
+
+package financeira
+
+// Funcao Publica: Outros pacotes podem chamar financeira.CalcularImposto()
+func CalcularImposto() { ... }
+
+// Funcao Privada: Só a pasta 'financeira' enxerga. Ninguém de fora vê.
+func segredoDoBanco() { ... }
+
+É como uma loja: O que está na vitrine (Maiúscula) você vê. O que está no estoque (Minúscula) é interno da loja.
+
+---
+
+3. CRIANDO SEU PRÓPRIO PACOTE
+
+Vamos organizar uma calculadora. Estrutura de pastas:
+
+meu-projeto/
+├── go.mod
+├── main.go
+└── matematica/    <-- Nova Pasta (Pacote)
+    └── somar.go   <-- Arquivo do Pacote
+
+Arquivo matematica/somar.go:
+    package matematica // O nome da pasta
+
+    // Soma dois números (Público, pois começa com S maiúsculo)
+    func Somar(a, b int) int {
+        return a + b
+    }
+
+Arquivo main.go (Raiz):
+    package main
+
+    import (
+        "fmt"
+        // Importamos usando o nome do módulo + nome da pasta
+        "github.com/seu-usuario/calculadora/matematica"
+    )
+
+    func main() {
+        resultado := matematica.Somar(10, 20)
+        fmt.Println(resultado)
+    }
+
+---
+
+4. IMPORTANDO CÓDIGO DE TERCEIROS (go get)
+
+O Go tem um ecossistema gigante. Quer criar um site? Um bot de Telegram? Conectar no banco de dados? Alguém já fez um pacote para isso.
+
+Para baixar, usamos o comando go get no terminal. Exemplo: Vamos baixar uma biblioteca de cores para deixar o terminal bonito.
+
+    go get github.com/fatih/color
+
+O Go vai:
+1. Baixar o código para o seu computador.
+2. Adicionar a linha no seu go.mod (registrando a dependência).
+3. Criar um arquivo go.sum (um checksum de segurança para garantir que ninguém alterou o código original).
+
+Agora é só usar no código:
+    import "github.com/fatih/color"
+
+    func main() {
+        color.Red("Erro Crítico!")
+        color.Green("Sucesso!")
+    }
+
+---
+
+5. go mod tidy (A FAXINA)
+
+Às vezes você importa uma biblioteca, desiste de usar, apaga o código, mas ela continua lá no go.mod sujando o arquivo. Ou você usou uma biblioteca nova mas esqueceu de dar go get.
+
+O comando mágico para arrumar a casa é:
+    go mod tidy
+
+Ele lê seu código, vê o que você está usando de verdade, baixa o que falta e remove o que sobra. Execute isso sempre antes de "fechar" o trabalho.
+
+---
+
+DICA DO GOPHER: Evite package utils ou package helpers
+
+Iniciantes adoram criar uma pasta utils e jogar tudo lá: formatação de data, validação de CPF, criptografia. Isso vira uma "gaveta da bagunça".
+
+Em Go, tente dar nomes semânticos aos pacotes:
+- Validação de CPF? Crie um pacote documentos.
+- Criptografia? Crie um pacote seguranca.
+- Formatação de data? Talvez estenda o próprio pacote do seu domínio.
+
+Nomes de pacotes devem dizer O QUE eles são, não que eles são "úteis".
+
+---
+
+EXEMPLOS PRÁTICOS (múltiplas pastas — não cabe em um único main.go):
+
+Arquivo 1: conversor/medidas.go
+    package conversor
+
+    // KmParaMilhas converte quilômetros para milhas.
+    // É pública (Maiúscula).
+    func KmParaMilhas(km float64) float64 {
+        return km * 0.621371
+    }
+
+    // milhasParaKm converte o inverso.
+    // É privada (Minúscula). Só a pasta 'conversor' pode usar.
+    // Tente chamar isso da main e veja o erro!
+    func milhasParaKm(milhas float64) float64 {
+        return milhas / 0.621371
+    }
+
+Arquivo 2: main.go
+    package main
+
+    import (
+        "fmt"
+        // Imagine que o caminho do import está configurado corretamente
+        "meu-projeto/conversor"
+    )
+
+    func main() {
+        km := 100.0
+        milhas := conversor.KmParaMilhas(km)
+
+        fmt.Printf("%.2f Km é igual a %.2f Milhas\n", km, milhas)
+
+        // Tente descomentar a linha abaixo:
+        // conversor.milhasParaKm(50) // ERRO: cannot refer to unexported name
+    }
+
+---
+
+EXERCÍCIOS:
+
+1. A Organização da Geometria (Fácil)
+Crie uma pasta geometria. Dentro dela, crie um arquivo formas.go com o pacote package geometria.
+Crie uma função AreaQuadrado(lado float64) float64.
+Na sua main.go (fora da pasta), importe o pacote e calcule a área de um quadrado de lado 5.
+
+2. O Segredo (Médio)
+No mesmo pacote geometria, crie uma variável PRIVADA numeroMagico = 42.
+Crie uma função PÚBLICA PegarSegredo() que retorna esse número.
+Na main, tente acessar geometria.numeroMagico (deve falhar).
+Depois tente acessar geometria.PegarSegredo() (deve funcionar).
+
+3. A Biblioteca Externa (Prático)
+- Abra seu terminal.
+- Rode go get github.com/google/uuid. (Essa lib gera IDs únicos universais).
+- No seu código, importe ela.
+- Chame uuid.New().String() e imprima o resultado.
+- Rode o código e veja um ID maluco tipo f47ac10b-58cc-4372-a567-0e02b2c3d479 aparecer.

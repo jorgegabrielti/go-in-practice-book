@@ -3,7 +3,6 @@
 //Struct Boleto -> Método imprime "Pagando R$ X via Boleto". Struct Cartao -> Método imprime "Pagando R$ X via Cartão". Crie uma função FinalizarCompra(p Pagamento, valor float64).
 // Teste pagando de formas diferentes.
 
-
 package main
 
 import "fmt"

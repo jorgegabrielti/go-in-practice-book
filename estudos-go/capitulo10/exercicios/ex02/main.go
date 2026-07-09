@@ -6,7 +6,7 @@ import "fmt"
 
 type Retangulo struct {
 	Largura int
-	Altura int
+	Altura  int
 }
 
 func calcularArea(r Retangulo) int {

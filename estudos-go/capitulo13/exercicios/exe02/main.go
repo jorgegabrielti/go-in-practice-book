@@ -17,9 +17,9 @@ func main() {
 	fmt.Println("Exercício 2: O Validador de Senha")
 
 	testes := []string{
-		"12345",          // Curta
-		"senhasegura",    // Sem número
-		"senha12345",     // Válida
+		"12345",       // Curta
+		"senhasegura", // Sem número
+		"senha12345",  // Válida
 	}
 
 	for _, senha := range testes {

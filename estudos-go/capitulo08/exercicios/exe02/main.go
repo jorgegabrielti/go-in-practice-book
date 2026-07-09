@@ -1,20 +1,20 @@
 //2. O dicionário de  Cores (Fácil)
 // Crie um map onde a chave é o nome da cor em Português e o Valor é em inglês.
 // Exemplo : {"Vermelho" : "Red"}
-// Peça para uma variável corBuscada := "Azul". 
+// Peça para uma variável corBuscada := "Azul".
 // Use o comma ok para verificar se existe. Se existir, imprima a tradução. Se não, imprima "Cor não encontrada".
 
 package main
 
 import "fmt"
 
-func main(){
+func main() {
 	//1. Criando o map com cores
 	cores := map[string]string{
-		"Vermelho"	: "Red",
-		"Verde"		: "Green",
-		"Amarelo"	: "Yellow",
-		"Laranja"	: "Orange",
+		"Vermelho": "Red",
+		"Verde":    "Green",
+		"Amarelo":  "Yellow",
+		"Laranja":  "Orange",
 	}
 
 	//2. Buscando uma cor

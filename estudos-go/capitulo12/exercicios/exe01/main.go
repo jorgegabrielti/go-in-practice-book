@@ -1,6 +1,6 @@
 //1. A Impressora (Fácil)
 // Crie uma interface Imprimivel com um método Imprimir() string.
-// Crie duas structs: Livro (Titulo, Autor) e Carro (Modelo, Marca). Implemente o método Imprimir para ambas (retorne uma frase bonitinha com os dados). 
+// Crie duas structs: Livro (Titulo, Autor) e Carro (Modelo, Marca). Implemente o método Imprimir para ambas (retorne uma frase bonitinha com os dados).
 // Na main, crie um slice []Imprimivel, coloque um livro e um carro dentro, e use um range para imprimir tudo.
 
 package main
@@ -13,7 +13,7 @@ type Imprimivel interface {
 
 type Livro struct {
 	Titulo string
-	Autor string
+	Autor  string
 }
 
 func (l Livro) Imprimir() string {
@@ -22,7 +22,7 @@ func (l Livro) Imprimir() string {
 
 type Carro struct {
 	Modelo string
-	Marca string
+	Marca  string
 }
 
 func (c Carro) Imprimir() string {

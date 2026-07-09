@@ -69,7 +69,7 @@ go fmt ./...
 
 ## 📊 Painel de Progresso (30 Capítulos)
 
-**Progresso Atual:** `[█████████████░░░░░░░░░]` **43%** (13 de 30 capítulos concluídos)
+**Progresso Atual:** `[████████████████░░░░░░]` **53%** (16 de 30 capítulos concluídos)
 
 | Capítulo | Título | Status | Recursos Disponíveis |
 | :---: | :--- | :---: | :---: |
@@ -86,10 +86,10 @@ go fmt ./...
 | **11** | **Métodos — Dando Vida aos Dados** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo11/exercicios) |
 | **12** | **Interfaces — O Plugue Universal** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo12/exercicios) |
 | **13** | **Tratamento de Erros — Sem Pânico!** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo13/exercicios) |
-| **14** | Capítulo 14 | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo14/README.md) |
-| **15** | Capítulo 15 | 🔴 *Não Iniciado* | *A ser criado* |
-| **16** | Capítulo 16 | 🔴 *Não Iniciado* | *A ser criado* |
-| **17** | Capítulo 17 | 🔴 *Não Iniciado* | *A ser criado* |
+| **14** | **Pacotes e Módulos — Sua Caixa de Ferramentas** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo14/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo14/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo14/exercicios) |
+| **15** | **Goroutines — A Cozinha Frenética e o Mágico Invisível** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo15/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo15/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo15/exercicios) |
+| **16** | **Channels — O Mensageiro Confiável** | 🟢 *Concluído* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo16/README.md) \| [Exemplos](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo16/exemplos) \| [Exercícios](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo16/exercicios) |
+| **17** | Capítulo 17 | 🟡 *Em Andamento* | [Notas de Estudo](file:///c:/Users/jorge/OneDrive/Documentos/PROJECTS/go-in-practice-book/estudos-go/capitulo17/README.md) |
 | **18** | Capítulo 18 | 🔴 *Não Iniciado* | *A ser criado* |
 | **19** | Capítulo 19 | 🔴 *Não Iniciado* | *A ser criado* |
 | **20** | Capítulo 20 | 🔴 *Não Iniciado* | *A ser criado* |

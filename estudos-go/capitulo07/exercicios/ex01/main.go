@@ -5,9 +5,9 @@ package main
 
 import "fmt"
 
-func main(){
-	convidados :=[]string{}
-	for i:=0; i < 5; i++ {
+func main() {
+	convidados := []string{}
+	for i := 0; i < 5; i++ {
 		convidados = append(convidados, fmt.Sprintf("Convidado %d", i+1)) // O que faz exatamente o Sprintf?
 	}
 	fmt.Println("Lista de convidados: ", convidados)

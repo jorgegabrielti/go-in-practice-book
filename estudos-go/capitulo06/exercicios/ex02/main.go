@@ -11,5 +11,5 @@ func analisarPreco(preco float64) (bool, string) {
 
 func main() {
 	fmt.Println(analisarPreco(50.0))
-	fmt.Println(analisarPreco(100.0))	
+	fmt.Println(analisarPreco(100.0))
 }

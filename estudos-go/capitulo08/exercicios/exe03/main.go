@@ -1,9 +1,9 @@
 //3. O sistema de Votação (Desfio)
-// Simule um urna eletrônica. Crie um map votos map[string]int. 
+// Simule um urna eletrônica. Crie um map votos map[string]int.
 // Crie uma função votar(candidato string) que incremente o voto no map. Simule vários votos: votar("Gopher"), votar("Python"), votar("Java"), votar("Python"), etc...
 //No final, imprima quem ganhou (quem tem o maior int no map). Dica: Você vai precisar iterar sobre o mmapa e guardar numa variável vencedor quem tem o maior valor encontrado até agora.
 
-package main 
+package main
 
 import "fmt"
 
@@ -38,5 +38,5 @@ func main() {
 		}
 	}
 	fmt.Println("Vencedor: ", vencedor)
-	
+
 }

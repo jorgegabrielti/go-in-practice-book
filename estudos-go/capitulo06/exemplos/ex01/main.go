@@ -14,7 +14,7 @@ func boasVindas(nome string) {
 //2. Múltiplos Retnornos(Cálculo de Retângulo)
 
 // Retorna Área e Perímetro
-func geometria(largura, altura float64)(float64, float64) {
+func geometria(largura, altura float64) (float64, float64) {
 	area := largura * altura
 	perimetro := 2 * (largura + altura)
 	return area, perimetro
@@ -26,7 +26,7 @@ func dividir(a, b float64) (float64, error) {
 		//erros.New cria um erro simples
 		return 0, errors.New("Proibido dividor por zero")
 	}
-	return a/b, nil
+	return a / b, nil
 }
 
 //4. Variádica(Média de N notas)
@@ -47,11 +47,11 @@ func main() {
 	boasVindas("Jorge Gabriel")
 
 	// Recebendo múltiplos valores
-	a, p := geometria(5.0,3.0) // Go infere que são float64
+	a, p := geometria(5.0, 3.0) // Go infere que são float64
 	fmt.Printf("Retângulo 5x3 -> ÁREA: %.2f, Perímetro: %.2f\n", a, p)
 
 	//Testando erro
-	resultado, err := dividir(10,2)
+	resultado, err := dividir(10, 2)
 
 	if err != nil {
 		fmt.Println("Erro: ", err)
@@ -67,6 +67,6 @@ func main() {
 	}
 
 	// Função variádica
-	mediaTurma := calcularMedia(8.5,9.0,5.5,10.0)
+	mediaTurma := calcularMedia(8.5, 9.0, 5.5, 10.0)
 	fmt.Printf("Media da turma: %.2f\n", mediaTurma)
 }

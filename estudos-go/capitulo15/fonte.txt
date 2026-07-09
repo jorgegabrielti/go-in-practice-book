@@ -1,0 +1,178 @@
+Capítulo 15: Goroutines - A Cozinha Frenética e o Mágico Invisível
+
+INTRODUÇÃO: O CHEF SOLITÁRIO VS. A BRIGADA
+
+Bem-vindo à Parte 3. Aqui é onde o Go deixa a concorrência para trás (literalmente). Até agora, nossos programas seguiam uma linha reta:
+1. Lave os pratos.
+2. (Terminou?) Seque os pratos.
+3. (Terminou?) Guarde os pratos.
+
+Imagine um restaurante com um único chef (isso é um programa tradicional "Single-Threaded"). O chef coloca o bife na chapa. Enquanto o bife frita (5 minutos), o chef fica parado, olhando para o bife, de braços cruzados. Os clientes lá fora estão gritando de fome. Só quando o bife fica pronto é que ele vai cortar a salada. Isso é ineficiente.
+
+Agora imagine uma Cozinha Profissional (Go). O chef coloca o bife na chapa e grita: "Bife fritando!". Imediatamente, ele vira para o lado e começa a cortar a salada. Enquanto corta, ele grita para o estagiário: "Lave a louça!". Três coisas estão acontecendo ao mesmo tempo.
+
+Em Go, cada tarefa independente que roda simultaneamente se chama Goroutine.
+
+---
+
+1. O QUE É UMA GOROUTINE? (MERGULHO TÉCNICO)
+
+Você pode ter ouvido falar de "Threads" em outras linguagens (Java, C++, Python). Para entender a revolução do Go, precisamos entender o passado.
+
+Threads de Sistema Operacional (O Jeito Antigo)
+Uma Thread tradicional é cara.
+- Peso: Ela consome cerca de 1MB de memória apenas para existir.
+- Troca de Contexto: Quando o computador para de rodar a Thread A para rodar a Thread B, ele precisa salvar um monte de registradores da CPU. Isso demora microssegundos (o que é uma eternidade para um processador).
+- Limite: Se você tentar criar 100.000 threads no seu notebook, o Sistema Operacional vai travar ou recusar ("Out of Memory").
+
+Goroutines (O Jeito Go)
+Uma Goroutine não é uma Thread de SO. Ela é uma "Thread Verde" ou "Thread Virtual".
+- Peso: Ela começa ocupando míseros 2KB de memória. (É 500x menor que uma Thread!).
+- Flexibilidade: A pilha de memória dela cresce e diminui conforme a necessidade.
+- Escalabilidade: Você pode criar milhões de Goroutines em um servidor modesto.
+
+---
+
+2. O MÁGICO INVISÍVEL: GO RUNTIME SCHEDULER
+
+Como o Go roda milhões de Goroutines se o seu computador só tem 4 ou 8 núcleos de CPU? Aqui entra a mágica: o Go Runtime Scheduler.
+
+Imagine que o Sistema Operacional (Windows/Linux) nos deu apenas 4 operários reais (Threads de SO). Mas nós temos 10.000 tarefas (Goroutines) para fazer.
+
+O Scheduler do Go age como um Gerente de Fábrica Hiperativo:
+1. Ele coloca algumas Goroutines nas costas do Operário 1.
+2. Ele coloca outras nas costas do Operário 2.
+3. O Pulo do Gato: Se uma Goroutine ficar bloqueada (ex: esperando baixar um arquivo da internet), o Gerente arranca ela das costas do Operário e coloca outra Goroutine que está pronta para trabalhar.
+
+Isso se chama Modelo M:N. Muitas (M) Goroutines são multiplexadas em Poucas (N) Threads de Sistema. Tudo isso acontece transparente para você. Você só usa a palavra `go`.
+
+---
+
+3. A SINTAXE go
+
+Como transformar uma função normal em uma Goroutine? Basta colocar a palavra `go` na frente da chamada.
+
+    func cozinhar() {
+        fmt.Println("Cozinhando...")
+    }
+
+    func main() {
+        // Síncrono: O código para aqui e espera a função terminar.
+        cozinhar()
+
+        // Assíncrono: O código lança a tarefa e segue IMEDIATAMENTE.
+        // Não espera nem um milissegundo.
+        go cozinhar()
+
+        fmt.Println("Fim da main")
+    }
+
+---
+
+4. GOROUTINES ANÔNIMAS (CLOSURES)
+
+Muito frequentemente, você quer lançar uma tarefa rápida sem ter que criar uma função nomeada formal lá em cima. Você pode usar Funções Anônimas.
+
+    func main() {
+        go func() {
+            fmt.Println("Sou uma função anônima rodando em background")
+        }() // <-- Importante: Esses parênteses executam a função
+    }
+
+CUIDADO COM VARIÁVEIS EM LOOP (O "GOTCHA" CLÁSSICO):
+Até versões recentes do Go, isso era um problema comum.
+
+    for i := 0; i < 5; i++ {
+        go func() {
+            fmt.Println(i) // PERIGO!
+        }()
+    }
+
+Como a goroutine demora um pouquinho para arrancar, quando ela for ler o valor de `i`, o loop `for` já pode ter terminado. Você veria "5 5 5 5 5" impresso.
+
+Correção: Passe o valor como parâmetro.
+
+    for i := 0; i < 5; i++ {
+        go func(valor int) {
+            fmt.Println(valor) // Seguro!
+        }(i) // Passamos uma cópia de 'i' aqui
+    }
+
+---
+
+5. O PROBLEMA DO "TCHAU, OBRIGADO"
+
+Aqui está a pegadinha número 1 para iniciantes. A função `main` também é uma Goroutine. Quando a `main` termina, o programa morre. O Go não espera as outras Goroutines (os "filhos") terminarem. É como se o dono do restaurante apagasse a luz e trancasse a porta com os cozinheiros ainda lá dentro.
+
+Para resolver isso de forma profissional, usamos WaitGroups (Capítulo 18). Por enquanto, continuaremos usando o `time.Sleep` apenas para fins didáticos.
+
+---
+
+6. CONCORRÊNCIA VS. PARALELISMO
+
+O Rob Pike (criador do Go) tem uma frase famosa:
+"Concorrência é sobre lidar com muitas coisas ao mesmo tempo. Paralelismo é sobre fazer muitas coisas ao mesmo tempo."
+
+- Concorrência (Design): Um único chef lidando com 3 panelas. Ele corta cebola, mexe o molho, vira a carne. Ele nunca faz duas coisas no exato mesmo instante, mas ele progride em todas.
+- Paralelismo (Execução): Três chefs, cada um com sua panela. As três panelas são mexidas no mesmo milissegundo.
+
+O Go te dá ferramentas de Concorrência. Se o hardware permitir (Multicore), ele vira Paralelismo automaticamente.
+
+---
+
+EXEMPLOS PRÁTICOS (capitulo15/main.go):
+
+package main
+
+import (
+    "fmt"
+    "runtime" // Vamos usar para ver quantos CPUs temos
+    "time"
+)
+
+func tarefaPesada(id int) {
+    fmt.Printf("Robô %d: Iniciando trabalho...\n", id)
+    time.Sleep(2 * time.Second) // Simula trabalho duro
+    fmt.Printf("Robô %d: Terminou!\n", id)
+}
+
+func main() {
+    // Quantos corações (núcleos) esse computador tem?
+    numCpu := runtime.NumCPU()
+    fmt.Printf("Seu computador tem %d núcleos lógicos.\n", numCpu)
+
+    // Por padrão, o Go tenta usar todos eles.
+    // Você pode limitar com runtime.GOMAXPROCS(1) se quiser simular um PC antigo.
+
+    fmt.Println("\n--- Começando a Linha de Montagem ---")
+    start := time.Now()
+
+    // Lançando 10 robôs.
+    // Se fosse sequencial, levaria 20 segundos (10 * 2s).
+    // Como é concorrente, deve levar apenas ~2 segundos (todos trabalham juntos).
+
+    for i := 1; i <= 10; i++ {
+        go tarefaPesada(i)
+    }
+
+    // O Hack do Sleep (Prometo que no Cap 18 ensinarei o jeito certo!)
+    fmt.Println("O Chefe (Main) está esperando...")
+    time.Sleep(3 * time.Second)
+
+    duracao := time.Since(start)
+    fmt.Printf("\nTempo total: %s (Impressionante, não?)\n", duracao)
+}
+
+---
+
+EXERCÍCIOS:
+
+1. O Observador de CPUs (Fácil)
+Use `runtime.NumCPU()` e imprima quantos núcleos sua máquina tem. Depois, use `runtime.GOMAXPROCS(1)` para forçar o Go a usar apenas 1 núcleo. Rode o exemplo acima novamente. O tempo mudou? As mensagens dos robôs apareceram em ordem diferente?
+
+2. O Loop Traiçoeiro (Médio)
+Escreva um laço `for` de 0 a 100. Dentro dele, lance uma goroutine anônima que imprime o número: `go func() { fmt.Println(i) }()`. Rode o código. Você vê números repetidos? Você vê o número 100 ou 101? Descreva o caos. Depois conserte passando `i` como parâmetro da função anônima.
+
+3. O Ping-Pong Solitário (Desafio Conceitual)
+Crie uma função `ping()` que imprime "Ping" e dorme 500ms. Crie uma função `pong()` que imprime "Pong" e dorme 500ms. Lance as duas como goroutines. Faça a main dormir 5 segundos. Tente ver se eles ficam sincronizados ("Ping, Pong, Ping, Pong") ou se bagunça tudo.
+Spoiler: Sem canais (Cap 16), é impossível garantir a sincronia perfeita.

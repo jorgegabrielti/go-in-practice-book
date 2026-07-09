@@ -5,15 +5,15 @@ import (
 	"sort"
 )
 
-func main(){
+func main() {
 	//1. Criando e populando
 	// Map de Aluno(String) -> Notas (Slice de Float)
 
 	diario := make(map[string][]float64)
 
-	diario["Carlos"] 	= []float64{8.5,9.0}
-	diario["Ana"] 		= []float64{10.0,9.5,8.0}
-	diario["Beto"] 		= []float64{5.0}
+	diario["Carlos"] = []float64{8.5, 9.0}
+	diario["Ana"] = []float64{10.0, 9.5, 8.0}
+	diario["Beto"] = []float64{5.0}
 
 	fmt.Println("Diário: ", diario)
 
@@ -25,9 +25,8 @@ func main(){
 	if existe {
 		fmt.Println("Notas do Pedro: ", notas)
 	} else {
-		fmt.Println("O aluno " , aluno, "não está matriculado.")
+		fmt.Println("O aluno ", aluno, "não está matriculado.")
 	}
-
 
 	//3. Iterando de forma aleatória
 	fmt.Println("\n --- Lista de Chamada (Aleatória) ---")

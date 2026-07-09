@@ -10,35 +10,35 @@ package main
 import "fmt"
 
 type Musica struct {
-	Titulo string
-	Artista string
+	Titulo            string
+	Artista           string
 	DuracaoEmSegundos int
 }
 
 type Playlist struct {
-	Nome string
+	Nome    string
 	Musicas []Musica
 }
 
 func main() {
 	musica1 := Musica{
-		Titulo: "The Pretender",
-		Artista: "Foo Fighters",
+		Titulo:            "The Pretender",
+		Artista:           "Foo Fighters",
 		DuracaoEmSegundos: 269,
 	}
 	musica2 := Musica{
-		Titulo: "Bohemian Rhapsody",
-		Artista: "Queen",
+		Titulo:            "Bohemian Rhapsody",
+		Artista:           "Queen",
 		DuracaoEmSegundos: 355,
 	}
 	musica3 := Musica{
-		Titulo: "Stairway to Heaven",
-		Artista: "Led Zeppelin",
+		Titulo:            "Stairway to Heaven",
+		Artista:           "Led Zeppelin",
 		DuracaoEmSegundos: 482,
 	}
 
 	playlistRock := Playlist{
-		Nome: "Rock",
+		Nome:    "Rock",
 		Musicas: []Musica{musica1, musica2, musica3},
 	}
 

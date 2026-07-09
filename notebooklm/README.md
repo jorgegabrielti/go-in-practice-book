@@ -39,5 +39,8 @@ O livro *Go na Prática* é excelente: conciso, direto, cheio de boas analogias.
 | 11 | Métodos | [capitulo11.md](capitulo11.md) |
 | 12 | Interfaces | [capitulo12.md](capitulo12.md) |
 | 13 | Tratamento de Erros | [capitulo13.md](capitulo13.md) |
+| 14 | Pacotes e Módulos | [capitulo14.md](capitulo14.md) |
+| 15 | Goroutines | [capitulo15.md](capitulo15.md) |
+| 16 | Channels | [capitulo16.md](capitulo16.md) |
 
 > Novos arquivos são adicionados a cada capítulo concluído.

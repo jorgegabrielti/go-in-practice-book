@@ -1,0 +1,188 @@
+Capítulo 16: Channels - O Mensageiro Confiável
+
+O Mantra do Go: "Não compartilhe memória para se comunicar. Comunique-se para compartilhar memória."
+
+---
+
+INTRODUÇÃO: A CORRIDA DE REVEZAMENTO
+
+Imagine uma corrida de revezamento olímpica (4x100m). Temos quatro corredores (Goroutines). Eles correm muito rápido, mas precisam passar o bastão (Dados) um para o outro.
+
+Se o Corredor A chegar no ponto de troca e o Corredor B não estiver lá, o Corredor A para e espera. Se o Corredor B estiver lá esperando e o A não chegou, o Corredor B para e espera. A troca do bastão é o ponto de Sincronização. É o momento em que os dois mundos se encontram, trocam o objeto e seguem suas vidas.
+
+Em Go, esse bastão é o Channel (Canal). Channels são os tubos por onde as Goroutines conversam. Eles resolvem o problema clássico de "Memory Sharing" (duas pessoas tentando escrever no mesmo caderno ao mesmo tempo) de forma elegante: Transfira a caneta, não escreva junto.
+
+---
+
+1. O QUE É UM CHANNEL? (MERGULHO TÉCNICO)
+
+Um canal é um Tubo Tipado. Você não pode jogar lixo num canal. Se o canal é de Inteiros (chan int), só passam inteiros. Se é de Strings (chan string), só passam strings.
+
+Declarando e Inicializando
+
+Canais são tipos complexos (referências), então precisam ser inicializados com make.
+
+    // Um canal que transporta strings
+    var correio chan string
+    correio = make(chan string)
+
+    // Ou curto:
+    canal := make(chan int)
+
+---
+
+O Operador da Seta (<-)
+
+A seta indica a direção do dado.
+
+- canal <- valor : ENVIAR (A seta aponta para o canal. O dado entra no tubo).
+- valor := <-canal : RECEBER (A seta sai do canal. O dado sai do tubo).
+
+---
+
+2. O BLOQUEIO (BLOCKING): A MÁGICA DA SINCRONIZAÇÃO
+
+Por padrão, canais em Go são Unbuffered (Sem Buffer/Sem Armazenamento). Isso significa que o tubo é estreito. Não cabe nada "guardado" lá dentro.
+
+O que isso implica?
+
+1. Quando uma Goroutine tenta ENVIAR (c <- 10), ela TRAVA (Bloqueia) naquela linha até que outra Goroutine esteja pronta para RECEBER.
+
+2. Quando uma Goroutine tenta RECEBER (<- c), ela TRAVA até que alguém ENVIE.
+
+Isso elimina a necessidade de time.Sleep ou travas manuais (Mutex) na maioria dos casos. O próprio ato de comunicar sincroniza os relógios.
+
+Imagine um entregador de pizza. Ele toca a campainha (Envio). Ele não vai embora. Ele fica parado na porta (Bloqueado) até você abrir e pegar a pizza (Recebimento). Só depois da troca ele volta para a moto (Desbloqueia).
+
+---
+
+3. DEADLOCK: O ABRAÇO DA MORTE
+
+Se você tentar usar um canal numa única Goroutine (ex: na main sozinha), você causará um desastre.
+
+    func main() {
+        c := make(chan int)
+
+        // Tenta enviar 10.
+        // O programa TRAVA aqui esperando alguém receber.
+        // Mas não tem ninguém "do outro lado" (só tem a main).
+        c <- 10
+
+        fmt.Println(<-c)
+    }
+
+    // Resultado: "fatal error: all goroutines are asleep - deadlock!"
+
+O Go Runtime percebe: "Ei, todos os operários estão dormindo esperando algo que nunca vai acontecer. Vou desligar tudo."
+
+---
+
+4. FECHANDO CANAIS (close) E O LOOP range
+
+Quando o remetente termina de mandar dados, ele pode fechar o canal. close(canal). Isso é como lacrar a caixa de correio. "Não vem mais nada por aqui".
+
+Isso é útil para quem está recebendo. Podemos usar um loop for range no canal!
+
+    for mensagem := range canal {
+        fmt.Println("Recebi:", mensagem)
+    }
+    // O loop quebra SOZINHO quando o canal for fechado.
+
+Importante:
+
+1. Só o Remetente deve fechar o canal.
+2. Enviar em canal fechado gera Panic.
+3. Receber de canal fechado retorna o Zero Value imediatamente (não bloqueia).
+
+---
+
+5. CANAIS DIRECIONAIS (SEGURANÇA DE TIPOS)
+
+Você pode passar canais como parâmetros para funções. Para evitar que uma função que só deveria LER acabe ESCREVENDO, você pode especificar a direção na assinatura.
+
+- chan<- int : Canal Send-Only (Só entra).
+- <-chan int : Canal Receive-Only (Só sai).
+
+    // Essa função só pode ENVIAR dados
+    func produtor(c chan<- int) {
+        c <- 10
+        // x := <-c // ERRO de compilação!
+    }
+
+    // Essa função só pode RECEBER dados
+    func consumidor(c <-chan int) {
+        msg := <-c
+        fmt.Println(msg)
+    }
+
+Isso torna o código à prova de idiotas (Robustez).
+
+---
+
+EXEMPLOS PRÁTICOS (capitulo16/main.go):
+
+Exemplo 1: O Ping Pong (Sincronização Perfeita)
+
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+// O Jogador
+func jogarPingPong(nome string, c chan string) {
+    // Loop infinito
+    for {
+        // 1. Espera a bola chegar (Bloqueia aqui)
+        bola := <-c
+        fmt.Printf("%s: Recebi %s\n", nome, bola)
+        time.Sleep(500 * time.Millisecond) // Efeito dramático
+
+        // 2. Devolve a bola (Bloqueia até o outro pegar)
+        fmt.Printf("%s: Devolvendo...\n", nome)
+        c <- bola
+    }
+}
+
+func exemplo1_PingPong() {
+    mesa := make(chan string)
+
+    // [continuação não visível — presumivelmente lança duas goroutines
+    //  com go jogarPingPong("Ping", mesa) e go jogarPingPong("Pong", mesa),
+    //  envia a primeira bola: mesa <- "bola", e dorme para observar.]
+}
+
+---
+
+Exemplo 2: O Gerador e o Consumidor (com for range e close)
+
+    // [código parcialmente visível]
+    esteira := make(chan int)
+
+    // Lança o gerador em bg
+    go gerarNumeros(esteira) // Vai travar a cada envio até o consumidor ler
+
+    // O Consumidor roda na Main (ou poderia ser outra goroutine)
+    calcularQuadrado(esteira)
+
+    // Como calcularQuadrado usa um loop que só sai quando o canal fecha,
+    // a main espera tudo terminar naturalmente. Sem time.Sleep gambiarras!
+    }
+
+---
+
+EXERCÍCIOS:
+
+1. O Correio Elegante (Fácil)
+Crie um canal de strings. Crie uma goroutine que envia "Olá", "Mundo", "Do", "Go". Na main, receba e imprima essas 4 mensagens manualmente usando 4 fmt.Println(<-c). O que acontece se você tentar imprimir uma 5ª vez? (Deadlock).
+
+2. A Soma Distribuída (Médio)
+Crie uma função somar(valores []int, c chan int). Ela soma o slice e envia o total no canal. Na main:
+1. Crie um slice grande: []int{1, 2, 3, 4, 5, 6}.
+2. Divida ao meio: s1 := valores[:3] e s2 := valores[3:].
+3. Lance duas goroutines: go somar(s1, c) e go somar(s2, c).
+4. Receba os dois resultados (x, y := <-c, <-c) e some-os para o total final.
+
+3. O Temporizador Manual (Desafio)
+Crie uma função que aceita um canal. Ela dorme 2 segundos e depois envia true no canal. Na main, imprima "Esperando...". Faça uma operação de leitura no canal (<-c). Isso vai bloquear a main. Quando desbloquear, imprima "Pronto!". Você acabou de recriar o time.Sleep usando canais.

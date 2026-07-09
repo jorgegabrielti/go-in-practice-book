@@ -1,5 +1,5 @@
 //3. A calculadora Orientada a Métodos (Conceito)
-// Em vez de funções soltas soma(a,b), crie uma struct Calculadora 
+// Em vez de funções soltas soma(a,b), crie uma struct Calculadora
 // que mantém um histórico. type Calculadora struct {Resultado float64} Métodos:
 // - Somar(v float64): soma ao Resultado interno.
 // - Subtrair(v float64): subtrai do Resultado interno.

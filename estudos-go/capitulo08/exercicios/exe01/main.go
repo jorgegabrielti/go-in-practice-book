@@ -1,11 +1,11 @@
 //1. O Contador de Palavras (Clássico médio)
 // Imagine que você tem uma frase(string): "banana maçã laranja maçã banana".
 // Você quer saber quantas vezes cada palavra aparece. O resultado deve ser um map: {
-	// "banana": 3,
-	// "maçã": 2,
-	// "laranja": 1
+// "banana": 3,
+// "maçã": 2,
+// "laranja": 1
 // }
-// Dica: você pode criar um slice de palavras mmanualmente []string{"banana", ...} e percorrer ele, somando +1 no map para cada palavra encontrada. 
+// Dica: você pode criar um slice de palavras mmanualmente []string{"banana", ...} e percorrer ele, somando +1 no map para cada palavra encontrada.
 
 package main
 
@@ -26,5 +26,5 @@ func main() {
 	fmt.Println("Contagem de palavras:", contador)
 
 	//2. Exibindo os resultados ordenados alfabeticamente por chave (nome da fruta)
-	
+
 }

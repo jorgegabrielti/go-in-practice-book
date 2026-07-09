@@ -8,8 +8,8 @@ package main
 // Teste na main com casos que dão certo e errado.
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 func main() {

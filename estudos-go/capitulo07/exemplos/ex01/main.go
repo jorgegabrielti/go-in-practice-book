@@ -1,12 +1,11 @@
 package main
 
-
 import "fmt"
 
-func main(){
+func main() {
 
 	//--- 1. Arrays(fixos) ---
-	var arrayFixo[3]int
+	var arrayFixo [3]int
 
 	arrayFixo[0] = 10
 	arrayFixo[1] = 20
@@ -23,8 +22,8 @@ func main(){
 
 	//--- 2. Slices(Dinâmicos) ---
 	// Criando slice vazio
-	
-	var sliceDinamico[]int
+
+	var sliceDinamico []int
 	fmt.Println("\nSlice Inicial: ", sliceDinamico)
 	fmt.Println("Vazio?", sliceDinamico == nil)
 
@@ -38,7 +37,7 @@ func main(){
 	// --- 3. Capacidade vs Tamanho ---
 	// Vamos observar o Go "trocando de array" quando enche
 	numeros := make([]int, 0, 2) // Tamanho 0, Capacidade 2
-	
+
 	fmt.Printf("\nLen: %d, Cap: %d, Array: %v\n", len(numeros), cap(numeros), numeros)
 
 	numeros = append(numeros, 1)
@@ -64,5 +63,5 @@ func main(){
 	fmt.Println("--- Depois de mudar a cópia ---")
 	fmt.Println("Cópia: ", copiaCopia)
 	fmt.Println("Original: ", original) // O Batman virou Coringa no original também!
-	
+
 }
